@@ -4,10 +4,11 @@ import { passwordResetSuccessTemplate } from "../mailtrap/passwordResetSuccessTe
 import { User } from "../models/User.js";
 
 export const resetPasswordRouteHandler = async (req, res) => {
+  // Extracts the token from req.params.
+  // Extracts the new password from req.body.
+  const { token } = req.params;
+  const { password } = req.body;
   try {
-    const { token } = req.params;
-    const { password } = req.body;
-
     const user = await User.findOneAndUpdate(
       {
         resetPasswordToken: token,
