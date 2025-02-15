@@ -8,22 +8,6 @@ export const resetPasswordRouteHandler = async (req, res) => {
     const { token } = req.params;
     const { password } = req.body;
 
-    // Validate input
-    if (!token || typeof token !== "string") {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid reset token",
-      });
-    }
-
-    if (!password || password.length < 8) {
-      return res.status(400).json({
-        success: false,
-        message: "Password must be at least 8 characters",
-      });
-    }
-
-    // Find and update user atomically
     const user = await User.findOneAndUpdate(
       {
         resetPasswordToken: token,
@@ -46,13 +30,11 @@ export const resetPasswordRouteHandler = async (req, res) => {
       });
     }
 
-    // Send response immediately
     res.json({
       success: true,
       message: "Password reset successful",
     });
 
-    // Send email async after response
     try {
       await client.send({
         from: sender,
@@ -61,7 +43,7 @@ export const resetPasswordRouteHandler = async (req, res) => {
         html: passwordResetSuccessTemplate,
         category: "password reset",
       });
-      console.log("Password reset email sent successfully");
+      console.log("Password-Changed email sent successfully");
     } catch (emailError) {
       console.error("Error sending password reset email:", emailError);
     }

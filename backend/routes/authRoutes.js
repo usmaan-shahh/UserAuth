@@ -5,6 +5,7 @@ import { logoutRouteHandler } from "../routeHandlers/logoutRouteHandler.js";
 import { loginRouteHandler } from "../routeHandlers/loginRouteHandler.js";
 import { forgetPasswordRoutehandler } from "../routeHandlers/forgotPasswordRouteHandler.js";
 import { resetPasswordRouteHandler } from "../routeHandlers/resetPasswordRouteHandler.js";
+
 const router = express.Router();
 
 router.post("/signup", signupRouteHandler);
