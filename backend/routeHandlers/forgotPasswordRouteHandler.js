@@ -1,4 +1,6 @@
+import { client, sender } from "../mailtrap/mailTrapConfig";
 import { User } from "../models/User";
+import crypto from "crypto";
 
 export const forgetPasswordRoutehandler = async (req, res) => {
   const { email } = req.body;
@@ -8,6 +10,32 @@ export const forgetPasswordRoutehandler = async (req, res) => {
       return res
         .status(404)
         .json({ success: false, message: "USER NOT FOUND" });
+    }
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    const resetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000;
+
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpiresAt = resetTokenExpiresAt;
+
+    await user.save();
+
+    const recipient = [
+      {
+        email: user.email,
+      },
+    ];
+
+    try {
+      const response = await client.send({
+        from: sender,
+        to: recipient,
+        subject: "RESET YOUR PASSWORD",
+        // html:,
+        category: "password reset",
+      });
+    } catch (error) {
+      console.error("Error sending password reset email, error");
+      throw new Error(`Error sending password reset email: ${error}`);
     }
   } catch (error) {}
 };
