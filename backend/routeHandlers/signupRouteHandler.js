@@ -6,6 +6,7 @@ import { sender } from "../mailtrap/mailTrapConfig.js";
 import { verificationEmailTemplate } from "../mailtrap/verificationEmailTemplate.js";
 
 export const signupRouteHandler = async (request, response) => {
+  // Extract email, password, and name from request.body.
   const { email, password, name } = request.body;
 
   try {
@@ -15,6 +16,7 @@ export const signupRouteHandler = async (request, response) => {
         .json({ success: false, message: "All fields are required" });
     }
 
+    // Check if the user already exists in the User collection
     const userAlreadyExists = await User.exists({ email }); //Find a document in the User collection where the email field is "example@email.com
 
     if (userAlreadyExists) {
@@ -23,12 +25,15 @@ export const signupRouteHandler = async (request, response) => {
         .json({ success: false, message: "User already exists" });
     }
 
+    // Hash the password using bcryptjs
     const hashedPassword = await bcryptjs.hash(password, 10);
 
+    // Generate a verification token
     const verificationToken = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
 
+    //Create a newUser document in users collection
     const newUser = new User({
       email,
       password: hashedPassword,
@@ -39,6 +44,7 @@ export const signupRouteHandler = async (request, response) => {
 
     await newUser.save();
 
+    // Generate a JWT token for authentication
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
@@ -80,6 +86,7 @@ export const signupRouteHandler = async (request, response) => {
     }
     //  E-mail verification code for signup ends here
 
+    // Send a success response with the newly created user (excluding the password).
     response.status(201).json({
       success: true,
       message: "User created successfully. Please verify your email.",
