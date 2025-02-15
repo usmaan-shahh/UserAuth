@@ -3,15 +3,17 @@ import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export const loginRouteHandler = async (req, res) => {
+  // Extract email and password from req.body.
   const { email, password } = req.body;
+
   try {
-    // 1. Find user by email
+    // Check if a user with that email exists in the User collection.
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    // 2. Validate password
+    // Compare the entered password with the hashed password stored in the database.
     const isPasswordValid = await bcryptjs.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(400).json({ message: "Invalid email or password" });
@@ -19,9 +21,10 @@ export const loginRouteHandler = async (req, res) => {
 
     // 3. Update last login timestamp
     user.lastLogin = new Date();
+
     await user.save();
 
-    // 4. Generate JWT token
+    // Generate a JWT token if authentication is successful.
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
@@ -34,7 +37,7 @@ export const loginRouteHandler = async (req, res) => {
       maxAge: 60 * 60 * 1000,
     });
 
-    // 6. Prepare user data without sensitive information
+    // 6.Remove sensitive data before sending the response.
     const userData = user.toObject();
     delete userData.password;
 
