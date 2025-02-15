@@ -30,7 +30,7 @@ export const forgetPasswordRoutehandler = async (req, res) => {
         to: recipient,
         subject: "RESET YOUR PASSWORD",
         html: passwordResetRequestTemplate.replace(
-          "{ resetLink }",
+          "{resetLink}",
           `${process.env.CLIENT_URL}/reset-password/${resetToken}`
         ),
         category: "password reset",
