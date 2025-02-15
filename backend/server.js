@@ -11,7 +11,9 @@ const PORT = process.env.PORT;
 
 // Middleware to parse JSON request body
 app.use(express.json());
+
 app.use(cookieParser());
+
 app.use("/api/auth", authRoute);
 
 app.listen(PORT, function () {
