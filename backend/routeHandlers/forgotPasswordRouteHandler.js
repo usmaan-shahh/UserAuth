@@ -1,4 +1,5 @@
 import { client, sender } from "../mailtrap/mailTrapConfig";
+import { passwordResetRequestTemplate } from "../mailtrap/passwordResetRequestTemplate";
 import { User } from "../models/User";
 import crypto from "crypto";
 
@@ -24,13 +25,16 @@ export const forgetPasswordRoutehandler = async (req, res) => {
         email: user.email,
       },
     ];
-
+    const newResetLink = ` ${process.env.CLIENT_URL}/reset-password/${resetToken}`;
     try {
       const response = await client.send({
         from: sender,
         to: recipient,
         subject: "RESET YOUR PASSWORD",
-        // html:,
+        html: passwordResetRequestTemplate.replace(
+          "{ resetLink }",
+          newResetLink
+        ),
         category: "password reset",
       });
     } catch (error) {
