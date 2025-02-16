@@ -7,6 +7,7 @@ import { loginRouteHandler } from "../routeHandlers/loginRouteHandler.js";
 import { forgetPasswordRoutehandler } from "../routeHandlers/forgotPasswordRouteHandler.js";
 import { resetPasswordRouteHandler } from "../routeHandlers/resetPasswordRouteHandler.js";
 import { verifyToken } from "../middleware/verifyToken.js";
+import checkAuthRouteHandler from "../routeHandlers/checkAuthRouteHandler.js";
 
 router.post("/signup", signupRouteHandler);
 router.post("/verify-email", verifyEmail);
