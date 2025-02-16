@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 export const verifyToken = (req, res, next) => {
-  const token = req.cookies?.authToken;
+  const token = req.cookies.authToken;
 
   if (!token) {
     return res
@@ -18,7 +18,7 @@ export const verifyToken = (req, res, next) => {
         .json({ success: false, message: "Unauthorized - Invalid token" });
     }
 
-    req.userId = decoded.userId;
+    req.userId = decoded.id;
 
     next();
   } catch (error) {
