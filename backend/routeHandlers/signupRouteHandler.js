@@ -28,7 +28,7 @@ export const signupRouteHandler = async (request, response) => {
     // Hash the password using bcryptjs
     const hashedPassword = await bcryptjs.hash(password, 10);
 
-    // Generate a verification token
+    // Generate a 6-Digit verification token
     const verificationToken = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
@@ -98,3 +98,6 @@ export const signupRouteHandler = async (request, response) => {
       .json({ success: false, message: error.message });
   }
 };
+
+//  The secret key "your_secret_key" is used to sign (encrypt) the token.
+//  Payload → Contains user data (id, email).
