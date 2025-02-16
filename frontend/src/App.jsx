@@ -1,5 +1,8 @@
 import React from "react";
+import { Route, Routes } from " ";
 import FloatingShape from "./components/FloatingShape";
+import SignUpPage from "./pages/SignUpPage";
+import LoginPage from "./pages/LoginPage";
 
 const App = () => {
   return (
@@ -28,6 +31,11 @@ const App = () => {
         left="-10%"
         delay={2}
       />
+
+      <Routes>
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
     </div>
   );
 };
