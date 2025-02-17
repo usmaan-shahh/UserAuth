@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const handleChange = (event) => {};
@@ -55,21 +56,20 @@ const LoginPage = () => {
           </div>
         </form>
 
-        {/* Forgot Password and Sign Up Links */}
         <div className="mt-4 text-center">
-          <a
-            href="/forgot-password"
+          <Link
+            to="/forgot-password"
             className="text-sm text-blue-500 hover:underline"
           >
             Forgot Password?
-          </a>
+          </Link>
         </div>
         <div className="mt-2 text-center">
           <p className="text-sm">
             Don't have an account?{" "}
-            <a href="/signup" className="text-blue-500 hover:underline">
+            <Link to="/signup" className="text-blue-500 hover:underline">
               Sign Up
-            </a>
+            </Link>
           </p>
         </div>
       </div>
