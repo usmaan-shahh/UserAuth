@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 const LoginPage = () => {
   const handleChange = (e) => {};
@@ -21,7 +21,6 @@ const LoginPage = () => {
               type="email"
               id="email"
               name="email"
-              value={formData.email}
               onChange={handleChange}
               required
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
@@ -39,7 +38,6 @@ const LoginPage = () => {
               type="password"
               id="password"
               name="password"
-              value={formData.password}
               onChange={handleChange}
               required
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
