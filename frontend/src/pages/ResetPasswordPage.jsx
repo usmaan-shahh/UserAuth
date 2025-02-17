@@ -23,7 +23,6 @@ const ResetPasswordPage = () => {
               type="password"
               id="newPassword"
               name="newPassword"
-              value={formData.newPassword}
               onChange={handleChange}
               required
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
@@ -41,7 +40,6 @@ const ResetPasswordPage = () => {
               type="password"
               id="confirmNewPassword"
               name="confirmNewPassword"
-              value={formData.confirmNewPassword}
               onChange={handleChange}
               required
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
@@ -57,15 +55,6 @@ const ResetPasswordPage = () => {
             </button>
           </div>
         </form>
-
-        <div className="mt-4 text-center">
-          <p className="text-sm">
-            Remember your password?{" "}
-            <a href="/login" className="text-blue-500 hover:underline">
-              Login
-            </a>
-          </p>
-        </div>
       </div>
     </div>
   );
