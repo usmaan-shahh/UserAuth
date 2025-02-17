@@ -1,15 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
 
 const LoginPage = () => {
-  const handleChange = (e) => {};
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-  const handleSubmit = (e) => {};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { email, password } = formData;
+
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Login successful", data);
+      } else {
+        console.log("Login failed");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-semibold text-center mb-4">
-          <b>Login Below</b>
+          <b>Welcome Back</b>
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -23,6 +56,7 @@ const LoginPage = () => {
               type="email"
               id="email"
               name="email"
+              value={formData.email}
               onChange={handleChange}
               required
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
@@ -40,6 +74,7 @@ const LoginPage = () => {
               type="password"
               id="password"
               name="password"
+              value={formData.password}
               onChange={handleChange}
               required
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
@@ -55,6 +90,24 @@ const LoginPage = () => {
             </button>
           </div>
         </form>
+
+        {/* Forgot Password and Sign Up Links */}
+        <div className="mt-4 text-center">
+          <a
+            href="/forgot-password"
+            className="text-sm text-blue-500 hover:underline"
+          >
+            Forgot Password?
+          </a>
+        </div>
+        <div className="mt-2 text-center">
+          <p className="text-sm">
+            Don't have an account?{" "}
+            <a href="/signup" className="text-blue-500 hover:underline">
+              Sign Up
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
