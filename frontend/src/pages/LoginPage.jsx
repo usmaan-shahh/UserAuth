@@ -1,19 +1,9 @@
 import React, { useState } from "react";
 
 const LoginPage = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const handleChange = (e) => {};
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
+  const handleSubmit = (e) => {};
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
