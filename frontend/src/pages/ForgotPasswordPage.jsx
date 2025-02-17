@@ -1,15 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const LoginPage = () => {
-  const handleChange = (event) => {};
-  const handleSubmit = (event) => {};
+const ForgotPasswordPage = () => {
+  const handleChange = (e) => {};
+
+  const handleSubmit = (e) => {};
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-semibold text-center mb-4">
-          <b>Welcome Back</b>
+          <b>Forgot Password</b>
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -17,7 +18,7 @@ const LoginPage = () => {
               className="block text-sm font-medium text-gray-700"
               htmlFor="email"
             >
-              Email:
+              Enter your email address:
             </label>
             <input
               type="email"
@@ -29,46 +30,21 @@ const LoginPage = () => {
             />
           </div>
 
-          <div className="mb-4">
-            <label
-              className="block text-sm font-medium text-gray-700"
-              htmlFor="password"
-            >
-              Password:
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              onChange={handleChange}
-              required
-              className="mt-1 p-2 w-full border border-gray-300 rounded-md"
-            />
-          </div>
-
           <div className="mt-6 text-center">
             <button
               type="submit"
               className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600"
             >
-              Login
+              Send Reset Link
             </button>
           </div>
         </form>
 
         <div className="mt-4 text-center">
-          <Link
-            to="/forgotpassword"
-            className="text-sm text-blue-500 hover:underline"
-          >
-            Forgot Password?
-          </Link>
-        </div>
-        <div className="mt-2 text-center">
           <p className="text-sm">
-            Don't have an account?{" "}
-            <Link to="/signup" className="text-blue-500 hover:underline">
-              Sign Up
+            Remember your password?{" "}
+            <Link to="/" className="text-blue-500 hover:underline">
+              Login
             </Link>
           </p>
         </div>
@@ -77,4 +53,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default ForgotPasswordPage;

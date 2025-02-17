@@ -1,6 +1,6 @@
 import React from "react";
 
-const ResetPassword = () => {
+const ResetPasswordPage = () => {
   const handleChange = (e) => {};
 
   const handleSubmit = async (e) => {};
@@ -48,12 +48,6 @@ const ResetPassword = () => {
             />
           </div>
 
-          {errorMessage && (
-            <div className="text-red-500 text-sm text-center mb-4">
-              {errorMessage}
-            </div>
-          )}
-
           <div className="mt-6 text-center">
             <button
               type="submit"
@@ -64,7 +58,6 @@ const ResetPassword = () => {
           </div>
         </form>
 
-        {/* Back to Login Link */}
         <div className="mt-4 text-center">
           <p className="text-sm">
             Remember your password?{" "}
@@ -78,4 +71,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default ResetPasswordPage;
