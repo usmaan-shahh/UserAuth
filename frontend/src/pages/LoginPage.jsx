@@ -1,42 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 
 const LoginPage = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const { email, password } = formData;
-
-    try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Login successful", data);
-      } else {
-        console.log("Login failed");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+  const handleChange = (event) => {};
+  const handleSubmit = (event) => {};
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -56,7 +22,6 @@ const LoginPage = () => {
               type="email"
               id="email"
               name="email"
-              value={formData.email}
               onChange={handleChange}
               required
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
@@ -74,7 +39,6 @@ const LoginPage = () => {
               type="password"
               id="password"
               name="password"
-              value={formData.password}
               onChange={handleChange}
               required
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
