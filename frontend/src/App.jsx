@@ -1,8 +1,7 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
 
 const App = () => {
-  return <div>{Outlet}</div>;
+  return <div>App</div>;
 };
 
 export default App;
