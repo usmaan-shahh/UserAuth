@@ -1,9 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import VerifyEmailPage from "./VerifyEmailPage";
 
 const SignupPage = () => {
+  const navigate = useNavigate();
+
   const handleChange = (e) => {};
 
-  const handleSubmit = (e) => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate("/verifyemail");
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

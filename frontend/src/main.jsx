@@ -12,6 +12,7 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
+import VerifyEmailPage from "./pages/VerifyEmailPage.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
       <Route path="/resetpassword" element={<ResetPasswordPage />} />
+      <Route path="/verifyemail" element={<VerifyEmailPage />} />
     </Route>
   )
 );
