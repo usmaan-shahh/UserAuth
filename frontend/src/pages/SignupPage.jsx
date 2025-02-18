@@ -1,15 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import VerifyEmailPage from "./VerifyEmailPage";
+import { useSignupMutation } from "../apiSlice/apiSlice";
 
 const SignupPage = () => {
-  const navigate = useNavigate();
+  const [signup, { isLoading, error }] = useSignupMutation();
+  const navigateTo = useNavigate();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
-  const handleChange = (e) => {};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/verifyemail");
+    try {
+      await signup(formData).unwrap();
+      navigateTo("/verifyemail", { state: { email: formData.email } });
+    } catch (error) {
+      console.error("Signup failed:", error);
+    }
   };
 
   return (
