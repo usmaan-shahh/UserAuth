@@ -22,7 +22,7 @@ const SignupPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await signup(formData).unwrap();
+      await signup(formData);
       navigateTo("/verifyemail", { state: { email: formData.email } });
     } catch (error) {
       console.error("Signup failed:", error);
