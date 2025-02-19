@@ -39,14 +39,14 @@ const SignupPage = () => {
           <div className="mb-4">
             <label
               className="block text-sm font-medium text-gray-700"
-              htmlFor="username"
+              htmlFor="name"
             >
               Username:
             </label>
             <input
               type="text"
-              id="username"
-              name="username"
+              id="name"
+              name="name"
               onChange={handleChange}
               required
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
