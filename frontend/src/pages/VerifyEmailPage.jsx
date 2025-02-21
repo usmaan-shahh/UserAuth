@@ -4,11 +4,11 @@ import { useVerifyEmailMutation } from "../apiSlice/apiSlice";
 
 const VerifyEmailPage = () => {
   const navigateTo = useNavigate();
-  const [verifyEmail, { isLoading, error }] = useVerifyEmailMutation();
+  const [verifyEmail] = useVerifyEmailMutation();
   const [code, setCode] = useState("");
 
   const handleChange = (event) => {
-    const value = event.target.value.replace(/\D/g, "").slice(0, 6);
+    const value = event.target.value.replace(/\D/g, "").slice(0, 6); //(/\D/g, ""), It ensures that only digits (0-9) are allowed. slice(0, 6) Restricting length to a max limit of 6 digits
     setCode(value);
   };
 
@@ -46,7 +46,6 @@ const VerifyEmailPage = () => {
               value={code}
               onChange={handleChange}
               required
-              maxLength="6"
               className="mt-1 p-2 w-full border border-gray-300 rounded-md text-center tracking-widest"
             />
           </div>
