@@ -10,7 +10,7 @@ import cors from "cors";
 const PORT = process.env.PORT;
 
 // Middleware to parse JSON request body
-app.use(express.json()); // express.json() converts incoming JSON data into a JavaScript object.
+app.use(express.json()); // express.json() converts incoming JSON data into a JavaScript object. It expects the incoming request to have a JSON body.
 
 app.use(cookieParser());
 
