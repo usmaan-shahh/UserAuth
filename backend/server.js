@@ -6,7 +6,7 @@ import connectDB from "./configiration/connectDB.js";
 connectDB();
 import authRoute from "./routes/authRoutes.js";
 import cookieParser from "cookie-parser";
-
+import cors from "cors";
 const PORT = process.env.PORT;
 
 // Middleware to parse JSON request body
@@ -14,6 +14,12 @@ app.use(express.json());
 
 app.use(cookieParser());
 
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use("/api/auth", authRoute);
 
 app.listen(PORT, function () {

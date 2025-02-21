@@ -16,7 +16,14 @@ export const apiSlice = createApi({
         body: data,
       }),
     }),
+    verifyEmail: builder.mutation({
+      query: (code) => ({
+        url: "/verify-email",
+        method: "POST",
+        body: { code },
+      }),
+    }),
   }),
 });
 
-export const { useSignupMutation } = apiSlice;
+export const { useSignupMutation, useVerifyEmailMutation } = apiSlice;

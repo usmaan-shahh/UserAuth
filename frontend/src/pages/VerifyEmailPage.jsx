@@ -1,17 +1,25 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useVerifyEmailMutation } from "../apiSlice/apiSlice";
 
 const VerifyEmailPage = () => {
+  const navigateTo = useNavigate();
+  const [verifyEmail, { isLoading, error }] = useVerifyEmailMutation();
   const [code, setCode] = useState("");
 
   const handleChange = (event) => {
-    const { value } = event.target;
-    if (/^\d{0,6}$/.test(value)) {
-      setCode(value);
-    }
+    const value = event.target.value.replace(/\D/g, "").slice(0, 6);
+    setCode(value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    try {
+      await verifyEmail(code);
+      navigateTo("/");
+    } catch (error) {
+      console.error("Verification failed:", error);
+    }
   };
 
   return (
