@@ -4,7 +4,9 @@ import { useSignupMutation } from "../apiSlice/apiSlice";
 
 const SignupPage = () => {
   const [signup, { isLoading, error }] = useSignupMutation();
+
   const navigateTo = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -23,7 +25,7 @@ const SignupPage = () => {
     e.preventDefault();
     try {
       await signup(formData);
-      navigateTo("/verifyemail", { state: { email: formData.email } });
+      navigateTo("/verifyemail"); //We can pass additional data to the next page using {state:{email:formData.email}}:
     } catch (error) {
       console.error("Signup failed:", error);
     }

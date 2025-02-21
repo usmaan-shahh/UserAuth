@@ -16,6 +16,7 @@ export const apiSlice = createApi({
         body: data,
       }),
     }),
+
     verifyEmail: builder.mutation({
       query: (code) => ({
         url: "/verify-email",
