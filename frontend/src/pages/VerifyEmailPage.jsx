@@ -5,12 +5,13 @@ import { FaKey } from "react-icons/fa";
 
 const VerifyEmailPage = () => {
   const navigateTo = useNavigate();
+
   const [verifyEmail] = useVerifyEmailMutation();
+
   const [code, setCode] = useState("");
 
   const handleChange = (event) => {
-    //(/\D/g, ""), It ensures that only digits (0-9) are allowed. slice(0, 6) Restricting length to a max limit of 6 digits
-    const value = event.target.value.replace(/\D/g, "").slice(0, 6);
+    const value = event.target.value.replace(/\D/g, "").slice(0, 6); //(/\D/g, ""), It ensures that only digits (0-9) are allowed. slice(0, 6) Restricting length to a max limit of 6 digits
     setCode(value);
   };
 
