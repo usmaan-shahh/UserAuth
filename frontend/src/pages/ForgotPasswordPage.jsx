@@ -1,10 +1,11 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useForgotPasswordMutation } from "../apiSlice/apiSlice";
 
 const ForgotPasswordPage = () => {
   const [forgotPassword] = useForgotPasswordMutation();
   const [email, setEmail] = useState("");
+  const navigate = useNavigate();
   const handleChange = (event) => {
     const { value } = event.target;
     setEmail(value);
@@ -12,7 +13,8 @@ const ForgotPasswordPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await forgotPassword({ email });
+    await forgotPassword(email).unwrap();
+    alert("Reset link sent to email");
   };
 
   return (

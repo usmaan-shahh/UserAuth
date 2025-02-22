@@ -1,9 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
+import { useResetPasswordMutation } from "../apiSlice/apiSlice";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ResetPasswordPage = () => {
-  const handleChange = (e) => {};
+  const [resetPassword] = useResetPasswordMutation();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+  const { token } = useParams();
 
-  const handleSubmit = async (e) => {};
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      setErrorMessage("Passwords do not match");
+      return;
+    }
+
+    try {
+      await resetPassword({ token, password }).unwrap();
+      navigate("/login"); // Redirect to login page after successful reset
+    } catch (error) {
+      console.error("Password reset failed:", error);
+      setErrorMessage(error.data?.message || "Password reset failed");
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -11,6 +41,11 @@ const ResetPasswordPage = () => {
         <h2 className="text-2xl font-semibold text-center mb-4">
           <b>Reset Your Password</b>
         </h2>
+        {errorMessage && (
+          <div className="mb-4 text-red-500 text-sm text-center">
+            {errorMessage}
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
@@ -23,7 +58,8 @@ const ResetPasswordPage = () => {
               type="password"
               id="newPassword"
               name="newPassword"
-              onChange={handleChange}
+              value={password}
+              onChange={handlePasswordChange}
               required
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
             />
@@ -40,7 +76,8 @@ const ResetPasswordPage = () => {
               type="password"
               id="confirmNewPassword"
               name="confirmNewPassword"
-              onChange={handleChange}
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
               required
               className="mt-1 p-2 w-full border border-gray-300 rounded-md"
             />
