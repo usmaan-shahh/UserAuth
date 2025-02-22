@@ -22,7 +22,7 @@ const router = createBrowserRouter(
       <Route index element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
-      <Route path="/resetpassword" element={<ResetPasswordPage />} />
+      <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
       <Route path="/verifyemail" element={<VerifyEmailPage />} />
     </Route>
   )
