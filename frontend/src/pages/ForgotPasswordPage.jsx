@@ -1,10 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useForgotPasswordMutation } from "../apiSlice/apiSlice";
 
 const ForgotPasswordPage = () => {
-  const handleChange = (e) => {};
+  const [forgotPassword] = useForgotPasswordMutation();
+  const [email, setEmail] = useState("");
+  const handleChange = (event) => {
+    const { value } = event.target;
+    setEmail(value);
+  };
 
-  const handleSubmit = (e) => {};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await forgotPassword({ email });
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

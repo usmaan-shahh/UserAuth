@@ -21,10 +21,21 @@ export const apiSlice = createApi({
       query: (code) => ({
         url: "/verify-email",
         method: "POST",
-        body: { code },
+        body: { code }, //RTK Query handles JSON conversion internally, so JSON.stringify() is not required.
+      }),
+    }),
+    forgotPassword: builder.mutation({
+      query: (email) => ({
+        url: "/reset-password",
+        method: "POST",
+        body: { email },
       }),
     }),
   }),
 });
 
-export const { useSignupMutation, useVerifyEmailMutation } = apiSlice;
+export const {
+  useSignupMutation,
+  useVerifyEmailMutation,
+  useForgotPasswordMutation,
+} = apiSlice;
