@@ -6,56 +6,60 @@ import { useForgotPasswordMutation } from "../apiSlice/apiSlice";
 const ForgotPasswordPage = () => {
   const [forgotPassword] = useForgotPasswordMutation();
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
-  // Handle input change for email field
+  // Handle input change
   const handleChange = (event) => {
-    const { value } = event.target;
-    setEmail(value);
+    setEmail(event.target.value);
   };
 
-  // Handle form submission to send password reset link
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await forgotPassword(email).unwrap();
-    alert("Reset link sent to email");
+    try {
+      await forgotPassword({ email }).unwrap();
+      setMessage("A password reset link has been sent to your email.");
+    } catch (error) {
+      setMessage("Failed to send reset link. Please try again.");
+    }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      {/* Card container */}
-      <div className="bg-white p-10 rounded-3xl shadow-2xl w-96 transform hover:scale-105 transition-transform duration-300">
-        {/* Page heading */}
-        <h2 className="text-2xl font-extrabold text-center text-gray-800 mb-4 uppercase tracking-wide">
+      <div className="bg-white p-8 rounded-lg shadow-md w-96">
+        <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
           Forgot Password
         </h2>
+
+        {message && (
+          <p className="text-center text-sm text-gray-600 mb-4">{message}</p>
+        )}
+
         <form onSubmit={handleSubmit}>
-          {/* Email input field */}
-          <div className="mb-6 relative">
-            <FaEnvelope className="absolute left-4 top-4 text-gray-500 text-lg" />
+          <div className="mb-4 relative">
+            <FaEnvelope className="absolute left-4 top-3 text-gray-500 text-lg" />
             <input
               type="email"
-              id="email"
               name="email"
+              value={email}
               onChange={handleChange}
               required
-              className="pl-12 p-4 w-full border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-400 shadow-sm"
+              className="pl-10 p-3 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
               placeholder="Enter your email"
             />
           </div>
 
-          {/* Submit button */}
           <button
             type="submit"
-            className="w-full py-4 text-white font-bold rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:opacity-90 transition-opacity duration-300 shadow-lg"
+            className="w-full py-3 text-white font-medium rounded-md bg-blue-500 hover:bg-blue-600 transition"
           >
             Send Reset Link
           </button>
         </form>
 
-        {/* Back to login link */}
         <div className="mt-4 text-center">
           <p className="text-sm">
-            Back to Login{" "}
+            Back to{" "}
             <Link to="/" className="text-blue-500 hover:underline">
               Login
             </Link>

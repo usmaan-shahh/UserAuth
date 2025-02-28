@@ -5,24 +5,11 @@ import { FaLock } from "react-icons/fa";
 
 const ResetPasswordPage = () => {
   const [resetPassword] = useResetPasswordMutation();
-
   const [password, setPassword] = useState("");
-
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [errorMessage, setErrorMessage] = useState("");
-
   const navigate = useNavigate();
-
   const { token } = useParams();
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,47 +30,49 @@ const ResetPasswordPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-10 rounded-3xl shadow-2xl w-96 transform hover:scale-105 transition-transform duration-300">
-        <h2 className="text-xl font-extrabold text-center text-gray-800 mb-4 uppercase tracking-wide">
+      <div className="bg-white p-8 rounded-lg shadow-md w-96">
+        <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
           Reset Your Password
         </h2>
+
         {errorMessage && (
           <div className="mb-4 text-red-500 text-sm text-center">
             {errorMessage}
           </div>
         )}
+
         <form onSubmit={handleSubmit}>
-          <div className="mb-6 relative">
-            <FaLock className="absolute left-4 top-4 text-gray-500 text-lg" />
+          <div className="mb-4 relative">
+            <FaLock className="absolute left-4 top-3 text-gray-500 text-lg" />
             <input
               type="password"
               id="newPassword"
               name="newPassword"
               value={password}
-              onChange={handlePasswordChange}
+              onChange={(e) => setPassword(e.target.value)}
               required
-              className="pl-12 p-4 w-full border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-400 shadow-sm"
+              className="pl-10 p-3 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
               placeholder="Enter new password"
             />
           </div>
 
-          <div className="mb-6 relative">
-            <FaLock className="absolute left-4 top-4 text-gray-500 text-lg" />
+          <div className="mb-4 relative">
+            <FaLock className="absolute left-4 top-3 text-gray-500 text-lg" />
             <input
               type="password"
               id="confirmNewPassword"
               name="confirmNewPassword"
               value={confirmPassword}
-              onChange={handleConfirmPasswordChange}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className="pl-12 p-4 w-full border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-400 shadow-sm"
+              className="pl-10 p-3 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
               placeholder="Confirm new password"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full py-4 text-white font-bold rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:opacity-90 transition-opacity duration-300 shadow-lg"
+            className="w-full py-3 text-white font-medium rounded-md bg-blue-500 hover:bg-blue-600 transition"
           >
             Reset Password
           </button>
