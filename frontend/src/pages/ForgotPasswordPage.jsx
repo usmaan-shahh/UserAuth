@@ -7,6 +7,7 @@ const ForgotPasswordPage = () => {
   const [forgotPassword] = useForgotPasswordMutation();
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   // Handle input change
   const handleChange = (event) => {
@@ -17,10 +18,11 @@ const ForgotPasswordPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await forgotPassword({ email }).unwrap();
-      setMessage("A password reset link has been sent to your email.");
+      await forgotPassword(email).unwrap();
+      setMessage("Password reset link has been sent to your email");
     } catch (error) {
-      setMessage("Failed to send reset link. Please try again.");
+      console.error("Password reset request failed:", error);
+      setError(error.data?.message || "Failed to send reset link");
     }
   };
 
@@ -33,6 +35,10 @@ const ForgotPasswordPage = () => {
 
         {message && (
           <p className="text-center text-sm text-gray-600 mb-4">{message}</p>
+        )}
+
+        {error && (
+          <p className="text-center text-sm text-red-500 mb-4">{error}</p>
         )}
 
         <form onSubmit={handleSubmit}>
