@@ -5,6 +5,7 @@ import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 
 const SignupPage = () => {
   const [signup, { isLoading, error }] = useSignupMutation();
+
   const navigateTo = useNavigate();
 
   const [formData, setFormData] = useState({
