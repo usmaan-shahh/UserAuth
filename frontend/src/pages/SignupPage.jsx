@@ -25,7 +25,7 @@ const SignupPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await signup(formData).unwrap();
+      await signup(formData);
       navigateTo("/verifyemail", {
         state: { email: formData.email },
       });
