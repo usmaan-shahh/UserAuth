@@ -45,11 +45,11 @@ export const signupRouteHandler = async (request, response) => {
     await newUser.save();
 
     // Generate a JWT token for authentication
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { //The payload helps the server know who's making the request.
       expiresIn: "1h",
     });
 
-    // Set token as an HTTP-only cookie
+        // Set token as an HTTP-only cookie
     response.cookie("authToken", token, {
       // "authToken" is the name of the cookie.
       // token is the value stored inside the cookie (usually a JWT token).
