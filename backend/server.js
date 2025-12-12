@@ -11,6 +11,7 @@ import corsOptions from "./configiration/corsOption.js";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import userRoutes from './routes/usersRoute.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,7 +27,7 @@ app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use(logger);
 app.use("/api/auth", authRoute);
-
+app.use('/users', userRoutes);
 app.use(errorHandler);
 
 app.use((req, res) => {

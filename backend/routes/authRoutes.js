@@ -1,12 +1,10 @@
 import express from "express";
 const router = express.Router();
-import loginRouteHandler from "../../routeHandlers/loginRouteHandler.js";
+import { login } from "../controllers/authController.js";
+import loginLimiter from "../middleware/rateLimiter.js";
 
-router.get("/refresh", verifyToken, checkAuthRouteHandler);
-router.post("/signup", loginLimiter, signupRouteHandler);
 
-router.post("/logout", logoutRouteHandler);
-router.post("/login", loginRouteHandler);
+router.post("/login", loginLimiter, login);
 
 
 export default router;
