@@ -36,18 +36,7 @@ export const resetPasswordRouteHandler = async (req, res) => {
       message: "Password reset successful",
     });
 
-    try {
-      await client.send({
-        from: sender,
-        to: [{ email: user.email }],
-        subject: "Password reset successful",
-        html: passwordResetSuccessTemplate,
-        category: "password reset",
-      });
-      console.log("Password-Changed email sent successfully");
-    } catch (emailError) {
-      console.error("Error sending password reset email:", emailError);
-    }
+
   } catch (error) {
     console.error("Error in resetting password:", error);
     res.status(500).json({

@@ -22,27 +22,11 @@ export const forgetPasswordRoutehandler = async (req, res) => {
 
     await user.save();
 
-    const recipient = [{ email: user.email }];
-
-    try {
-      await client.send({
-        from: sender,
-        to: recipient,
-        subject: "RESET YOUR PASSWORD",
-        html: passwordResetRequestTemplate.replace(
-          "{resetLink}",
-          `${process.env.CLIENT_URL}/reset-password/${resetToken}`
-        ),
-        category: "password reset",
-      });
-
-      return res.json({ success: true, message: "Reset email sent" });
-    } catch (error) {
-      console.error("Error sending password reset email:", error);
-      return res
-        .status(500)
-        .json({ success: false, message: "Email sending failed" });
-    }
+    return res.status(200).json({
+      success: true,
+      message: "Password reset token generated",
+      resetToken, // In a real application, you would send this token via email to the user.
+    });
   } catch (error) {
     console.error("Error in forgetPasswordRoutehandler:", error);
     return res

@@ -46,25 +46,6 @@ export const verifyEmail = async (req, res) => {
       message: "Email verified successfully",
     });
 
-    // Send welcome email asynchronously after response
-    const recipient = [{ email: updatedUser.email }];
-
-    client
-      .send({
-        from: sender,
-        to: recipient,
-        template_uuid: "7de73e73-3df2-4986-b0e1-78622ccfd749",
-        template_variables: {
-          name: updatedUser.name,
-          company_info_name: "Auth Company",
-        },
-      })
-      .then((emailResponse) => {
-        console.log("Welcome email sent successfully", emailResponse);
-      })
-      .catch((emailError) => {
-        console.error("Error sending welcome email", emailError);
-      });
   } catch (error) {
     console.error("Error verifying email", error);
     res.status(500).json({ success: false, message: "Server error" });

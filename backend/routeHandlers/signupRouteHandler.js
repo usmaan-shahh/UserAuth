@@ -59,30 +59,7 @@ export const signupRouteHandler = async (request, response) => {
       maxAge: 60 * 60 * 1000, // 1 hour
     });
 
-    //  E-mail verification code for signup starts:
-    const recipient = [
-      {
-        email: newUser.email,
-      },
-    ];
 
-    try {
-      const response = await client.send({
-        from: sender,
-        to: recipient,
-        subject: "Please Verify Your Email",
-        html: verificationEmailTemplate.replace(
-          "{verificationCode}",
-          newUser.verificationToken
-        ),
-        category: "Email Verification",
-      });
-      console.log("Email sent successfully", response);
-    } catch (error) {
-      console.error("Error sending verification", error);
-      throw new Error(`Error sending verification email ${error}`);
-    }
-    //  E-mail verification code for signup ends here
 
     // Send a success response with the newly created user (excluding the password).
     response.status(201).json({
