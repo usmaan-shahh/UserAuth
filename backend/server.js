@@ -1,37 +1,38 @@
 import express from "express";
-const app = express();
 import "dotenv/config";
 import connectDB from "./configiration/connectDB.js";
-connectDB();
 import authRoute from "./routes/authRoutes.js";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middleware/errorHandler.js";
-import { logger } from "./utils/logger.js";
+import { logEvents, logger } from "./utils/logger.js";
 import corsOptions from "./configiration/corsOption.js";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import userRoutes from './routes/usersRoute.js';
+import mongoose from "mongoose";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-
 const PORT = process.env.PORT;
 
-// Middleware to parse JSON request body
-app.use(express.json()); // express.json() converts incoming JSON data into a JavaScript object. It expects the incoming request to have a JSON body.
+const app = express();
+connectDB();
 
+
+app.use(express.json());
 app.use(cookieParser());
-
 app.use(cors(corsOptions));
 app.use(logger);
 
 app.use("/auth", authRoute);
 app.use('/users', userRoutes);
-app.use('/notes', require('./routes/noteRoutes'))
+app.use('/notes', userRoutes);
 
+//Global error handler
 app.use(errorHandler);
+
+//When no route matches the incoming request in your Express app
 app.use((req, res) => {
   res.status(404);
   if (req.accepts("html")) {
@@ -43,6 +44,17 @@ app.use((req, res) => {
   }
 });
 
-app.listen(PORT, function () {
-  console.log(`Server is running on ${PORT}`);
+//Never start the server before DB connection is successful.
+mongoose.connection.once('open', () => {
+  console.log('Connected to MongoDB');
+  app.listen(PORT, function () {
+    console.log(`Server is running on ${PORT}`);
+  });
 });
+
+//Listens for any MongoDB connection error.
+mongoose.connection.on('error', (err) => {
+  console.log(err);
+  logEvents(`${err.no}: ${err.code}\t${err.syscall}\t${err.hostname}`, 'mongoErrLog.log')
+});
+
