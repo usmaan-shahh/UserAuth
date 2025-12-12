@@ -1,4 +1,4 @@
-import { client, sender } from "../mailtrap/mailTrapConfig.js";
+
 import { User } from "../models/User.js";
 
 export const verifyEmail = async (req, res) => {

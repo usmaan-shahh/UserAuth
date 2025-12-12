@@ -1,5 +1,5 @@
-import { client, sender } from "../mailtrap/mailTrapConfig.js";
-import { passwordResetRequestTemplate } from "../mailtrap/passwordResetRequestTemplate.js";
+
+
 import { User } from "../models/User.js";
 import crypto from "crypto";
 

@@ -1,9 +1,7 @@
 import { User } from "../models/User.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { client } from "../mailtrap/mailTrapConfig.js";
-import { sender } from "../mailtrap/mailTrapConfig.js";
-import { verificationEmailTemplate } from "../mailtrap/verificationEmailTemplate.js";
+
 
 export const signupRouteHandler = async (request, response) => {
   // Extract email, password, and name from request.body.
@@ -49,7 +47,7 @@ export const signupRouteHandler = async (request, response) => {
       expiresIn: "1h",
     });
 
-        // Set token as an HTTP-only cookie
+    // Set token as an HTTP-only cookie
     response.cookie("authToken", token, {
       // "authToken" is the name of the cookie.
       // token is the value stored inside the cookie (usually a JWT token).

@@ -1,6 +1,6 @@
 import bcryptjs from "bcryptjs";
-import { client, sender } from "../mailtrap/mailTrapConfig.js";
-import { passwordResetSuccessTemplate } from "../mailtrap/passwordResetSuccessTemplate.js";
+
+
 import { User } from "../models/User.js";
 
 export const resetPasswordRouteHandler = async (req, res) => {
