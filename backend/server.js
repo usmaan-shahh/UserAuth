@@ -26,10 +26,12 @@ app.use(cookieParser());
 
 app.use(cors(corsOptions));
 app.use(logger);
-app.use("/api/auth", authRoute);
-app.use('/users', userRoutes);
-app.use(errorHandler);
 
+app.use("/auth", authRoute);
+app.use('/users', userRoutes);
+app.use('/notes', require('./routes/noteRoutes'))
+
+app.use(errorHandler);
 app.use((req, res) => {
   res.status(404);
   if (req.accepts("html")) {

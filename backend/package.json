@@ -20,6 +20,7 @@
     "express-rate-limit": "^8.2.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.20.2",
+    "mongoose-sequence": "^6.0.1",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
