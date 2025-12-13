@@ -52,8 +52,8 @@ const createNewUser = async (req, res, next) => {
 
 
 const updateUser = async (req, res) => {
-
-    const { id, username, password } = req.body
+    const id = req.userId 
+    const {  username, password } = req.body
 console.log(id, username, password)
     const user = await User.findById(id).exec()
 
