@@ -52,14 +52,9 @@ const createNewUser = async (req, res, next) => {
 
 
 const updateUser = async (req, res) => {
-    const { id, username, roles, active, password } = req.body
 
-    // Confirm data 
-    if (!id || !username || !Array.isArray(roles) || !roles.length || typeof active !== 'boolean') {
-        return res.status(400).json({ message: 'All fields except password are required' })
-    }
+    const { id, username, active, password } = req.body
 
-    // Does the user exist to update?
     const user = await User.findById(id).exec()
 
     if (!user) {
@@ -69,17 +64,15 @@ const updateUser = async (req, res) => {
     // Check for duplicate 
     const duplicate = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
 
-    // Allow updates to the original user 
+    // This prevents updating a user to a username that already belongs to another user. 
     if (duplicate && duplicate?._id.toString() !== id) {
-        return res.status(409).json({ message: 'Duplicate username' })
+        return res.status(409).json({ message: 'username already taken by another user' })
     }
 
     user.username = username
-    user.roles = roles
     user.active = active
 
     if (password) {
-        // Hash password 
         user.password = await bcrypt.hash(password, 10) // salt rounds 
     }
 

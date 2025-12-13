@@ -1,1 +1,16 @@
 The Zod Middleware validate's incoming request data using Zod schemas before the request reaches the controller.
+
+
+
+
+Update Request
+    ↓
+Find USERNAME in Database
+    ↓
+USERNAME exists?
+    ├─ NO→ Allow
+    └─ YES
+        ↓
+        Same user?
+            ├─ YES → llow (updating other fields)
+            └─ NO → Block (USERNAME taken by another user)
