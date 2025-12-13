@@ -25,11 +25,11 @@ export const login = async (req, res) => {
         {
             "UserInfo": {
                 "username": foundUser.username,
-                "roles": foundUser.roles
+                "userId": foundUser._id.toString()
             }
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '1m' }
+        { expiresIn: '10m' }
     )
 
     const refreshToken = jwt.sign(
@@ -71,7 +71,7 @@ export const refresh = (req, res) => {
                 {
                     "UserInfo": {
                         "username": foundUser.username,
-                        "roles": foundUser.roles
+                        "userId": foundUser._id.toString()
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,

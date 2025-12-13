@@ -53,8 +53,8 @@ const createNewUser = async (req, res, next) => {
 
 const updateUser = async (req, res) => {
 
-    const { id, username, active, password } = req.body
-
+    const { id, username, password } = req.body
+console.log(id, username, password)
     const user = await User.findById(id).exec()
 
     if (!user) {
@@ -69,8 +69,7 @@ const updateUser = async (req, res) => {
         return res.status(409).json({ message: 'username already taken by another user' })
     }
 
-    user.username = username
-    user.active = active
+
 
     if (password) {
         user.password = await bcrypt.hash(password, 10) // salt rounds 
