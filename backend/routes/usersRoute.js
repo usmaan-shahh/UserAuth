@@ -1,20 +1,40 @@
 import express from 'express';
+
+/* -------- Controllers -------- */
 import { getAllUsers, createNewUser, updateUser, deleteUser } from '../controllers/usersController.js';
+
+/* -------- Schemas -------- */
+import { publicSignupSchema, updateUserSchema, deleteUserSchema } from '../schemas/index.js';
+
+/* -------- Middlewares -------- */
 import verifyJWT from '../middleware/verifyJWT.js';
 import { validate } from "../middleware/validate.js";
-import {publicSignupSchema} from "../schemas/signUpSchema.js";
-import { updateUserSchema } from '../schemas/updateUserSchema.js';
-
 
 
 const router = express.Router();
 
-router.post('/',validate(publicSignupSchema), createNewUser);
-router.patch('/update', verifyJWT, validate(updateUserSchema), updateUser);
-
-
-
-router.get('/', verifyJWT, getAllUsers);
-router.delete('/', verifyJWT, deleteUser);
-
-export default router;
+/* ---------- PUBLIC ROUTES ---------- */
+router.post(
+    '/',
+    validate(publicSignupSchema),
+    createNewUser
+  );
+  
+  /* ---------- PROTECTED ROUTES ---------- */
+  router.use(verifyJWT);
+  
+  router.get('/', getAllUsers);
+  
+  router.patch(
+    '/update',
+    validate(updateUserSchema),
+    updateUser
+  );
+  
+  router.delete(
+    '/',
+    validate(deleteUserSchema),
+    deleteUser
+  );
+  
+  export default router;

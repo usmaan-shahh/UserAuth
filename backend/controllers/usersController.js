@@ -52,9 +52,11 @@ const createNewUser = async (req, res, next) => {
 
 
 const updateUser = async (req, res) => {
+
     const id = req.userId 
+
     const {  username, password } = req.body
-console.log(id, username, password)
+
     const user = await User.findById(id).exec()
 
     if (!user) {
@@ -70,7 +72,6 @@ console.log(id, username, password)
     }
 
 
-
     if (password) {
         user.password = await bcrypt.hash(password, 10) // salt rounds 
     }
@@ -82,15 +83,15 @@ console.log(id, username, password)
 
 
 const deleteUser = async (req, res) => {
-    const { id } = req.body
+   
 
-    // Confirm data
+ 
     if (!id) {
         return res.status(400).json({ message: 'User ID Required' })
     }
 
 
-    // Does the user exist to delete?
+   
     const user = await User.findById(id).exec()
 
     if (!user) {
