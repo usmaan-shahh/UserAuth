@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 
 export const verifyJWT = (req, res, next) => {
-    
+
     const authHeader = req.headers.authorization || req.headers.Authorization
 
     if (!authHeader?.startsWith('Bearer ')) {
@@ -12,7 +12,7 @@ export const verifyJWT = (req, res, next) => {
 
     jwt.verify(
 
-        token,
+        token, //the JWT string from client 
 
         process.env.ACCESS_TOKEN_SECRET,
         
