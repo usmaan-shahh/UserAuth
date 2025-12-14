@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 
 
 export const login = async (req, res) => {
+
     const { username, password } = req.body
 
     if (!username || !password) {
@@ -21,16 +22,20 @@ export const login = async (req, res) => {
 
     if (!match) return res.status(401).json({ message: 'Unauthorized' })
 
+
     const accessToken = jwt.sign(
         {
-            "UserInfo": {
+            
                 "username": foundUser.username,
                 "userId": foundUser._id.toString()
-            }
+            
         },
+
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '10m' }
+
+        { expiresIn: '13m' }
     )
+
 
     const refreshToken = jwt.sign(
         { "username": foundUser.username },
