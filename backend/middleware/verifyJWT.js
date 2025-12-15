@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken'
 
-export const verifyJWT = (req, res, next) => {
+const verifyJWT = (req, res, next) => {
 
-    const authHeader = req.headers.authorization || req.headers.Authorization
+    const authHeader = req.headers.authorization 
 
     if (!authHeader?.startsWith('Bearer ')) {
         return res.status(401).json({ message: 'Unauthorized' })
@@ -18,12 +18,16 @@ export const verifyJWT = (req, res, next) => {
         
         (error, decoded) => {
             if (error) return res.status(403).json({ message: 'Forbidden' })
-            req.user = decoded.username
-            req.userId = decoded.userId 
+
+                req.auth = {
+                    user: decoded.username,
+                    userId: decoded.userId,
+                  };
+                  
             next()
         }
 
     )
 }
 
-export default verifyJWT 
+export default verifyJWT
