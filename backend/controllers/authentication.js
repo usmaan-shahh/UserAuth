@@ -1,8 +1,40 @@
 import { User } from '../models/User.js'
-import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import { generateTokens } from '../utils/generateTokens.js'
+import { cookieOptions } from '../utils/cookieOptions.js'
 
+export const register = async (req, res, next) => {
+    try {
 
+      const { username, password } = req.body
+
+      const duplicate = await User.findOne({ username })
+        .collation({ locale: 'en', strength: 2 })
+        .lean()
+  
+      if (duplicate) {
+        return res.status(409).json({ message: 'Duplicate username' })
+      }
+  
+      const hashedPwd = await bcrypt.hash(password, 10)
+  
+      const user = await User.create({
+        username,
+        password: hashedPwd
+      })
+  
+      const { accessToken, refreshToken } = generateTokens(user)
+
+      res.cookie('jwt', refreshToken, cookieOptions)
+  
+      return res.status(201).json({ message: 'Signup successful', accessToken})
+  
+    } catch (err) {
+
+      next(err)
+
+    }
+  }
 
 export const login = async (req, res) => {
 
@@ -14,7 +46,7 @@ export const login = async (req, res) => {
 
     const foundUser = await User.findOne({ username }).exec()
 
-    if (!foundUser || !foundUser.active) {
+    if (!foundUser) {
         return res.status(401).json({ message: 'Unauthorized' })
     }
 
@@ -22,37 +54,22 @@ export const login = async (req, res) => {
 
     if (!match) return res.status(401).json({ message: 'Unauthorized' })
 
+      const { accessToken, refreshToken } = generateTokens(foundUser)
 
-    const accessToken = jwt.sign(
-        {
-            
-                "username": foundUser.username,
-                "userId": foundUser._id.toString()
-            
-        },
-
-        process.env.ACCESS_TOKEN_SECRET,
-
-        { expiresIn: '13m' }
-    )
+      res.cookie('jwt', refreshToken, cookieOptions)
+  
+      return res.status(201).json({ message: 'Login successful', accessToken})
 
 
-    const refreshToken = jwt.sign(
-        { "username": foundUser.username },
-        process.env.REFRESH_TOKEN_SECRET,
-        { expiresIn: '1d' }
-    )
+   
 
-    // Create secure cookie with refresh token 
-    res.cookie('jwt', refreshToken, {
-        httpOnly: true, //accessible only by web server 
-        secure: true, //https
-        sameSite: 'None', //cross-site cookie 
-        maxAge: 7 * 24 * 60 * 60 * 1000 //cookie expiry: set to match rT
-    })
+}
 
-    // Send accessToken containing username and roles 
-    res.json({ accessToken })
+export const logout = (req, res) => {
+    const cookies = req.cookies
+    if (!cookies?.jwt) return res.sendStatus(204) //No content
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true })
+    res.json({ message: 'Cookie cleared' })
 }
 
 export const refresh = (req, res) => {
@@ -74,10 +91,10 @@ export const refresh = (req, res) => {
 
             const accessToken = jwt.sign(
                 {
-                    "UserInfo": {
+                    
                         "username": foundUser.username,
                         "userId": foundUser._id.toString()
-                    }
+                    
                 },
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '15m' }
@@ -88,10 +105,5 @@ export const refresh = (req, res) => {
     )
 }
 
-export const logout = (req, res) => {
-    const cookies = req.cookies
-    if (!cookies?.jwt) return res.sendStatus(204) //No content
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true })
-    res.json({ message: 'Cookie cleared' })
-}
+
 
