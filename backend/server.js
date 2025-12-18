@@ -9,7 +9,7 @@ import corsOptions from "./configiration/corsOption.js";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
-import userRoutes from './routes/usersRoute.js';
+
 import mongoose from "mongoose";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,7 +26,7 @@ app.use(cors(corsOptions));
 app.use(logger);
 
 app.use("/auth", authRoute);
-app.use('/users', userRoutes);
+
 
 
 //Global error handler

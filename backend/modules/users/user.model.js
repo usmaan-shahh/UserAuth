@@ -9,14 +9,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    roles: {
-        type: [String],
-        default: ["Employee"]
-    },
-    active: {
-        type: Boolean,
-        default: true
-    }
 })
 
-export const User = mongoose.model('User', userSchema)
+const User = mongoose.model('User', userSchema)
+
+export default User

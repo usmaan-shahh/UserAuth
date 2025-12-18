@@ -2,7 +2,7 @@ import z from "zod"
 
 export const updateUserSchema = z.object({
     body: z.object({
-     
+
 
         username: z.string()
             .trim()
@@ -38,9 +38,9 @@ export const publicSignupSchema = z.object({
 
 export const deleteUserSchema = z.object({
     body: z.object({
-      id: z
-        .string()
-        .min(1, "User ID is required")
-        .regex(/^[0-9a-fA-F]{24}$/, "Invalid MongoDB ObjectId"),
+        id: z
+            .string()
+            .min(1, "User ID is required")
+            .regex(/^[0-9a-fA-F]{24}$/, "Invalid MongoDB ObjectId"),
     }).strict(),
-  });
+});
