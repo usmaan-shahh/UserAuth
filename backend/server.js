@@ -27,7 +27,7 @@ app.use(logger);
 
 app.use("/auth", authRoute);
 app.use('/users', userRoutes);
-app.use('/notes', userRoutes);
+
 
 //Global error handler
 app.use(errorHandler);

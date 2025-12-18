@@ -1,13 +1,20 @@
 import express from "express";
+import * as userController from "../modules/users/user.controller.js";
+import { loginLimiter } from "../middleware/index.js"
+
+
 const router = express.Router();
-import { login, logout, refresh } from "../controllers/authController.js";
-import {loginLimiter} from "../middleware/index.js"
 
+router.post("/register", userController.register);
 
-router.post("/login",  loginLimiter, login);
+router.post("/login", loginLimiter, userController.login);
 
-router.get('/refresh', refresh)
+router.post("/logout", userController.logout)
 
-router.post("/logout", logout)
+router.get('/refresh', userController.refresh)
+
+router.patch('/update', validate(updateUserSchema), userController.updateUser);
+
+router.delete('/delete', validate(deleteUserSchema), userController.deleteUser);
 
 export default router;
