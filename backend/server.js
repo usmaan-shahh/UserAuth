@@ -1,7 +1,7 @@
 import express from "express";
 import "dotenv/config";
 import connectDB from "./configiration/connectDB.js";
-import authRoute from "./routes/authRoutes.js";
+import authRouter from "./modules/auth/auth.routes.js"
 import cookieParser from "cookie-parser";
 import errorHandler from "./middleware/errorHandler.js";
 import { logEvents, logger } from "./utils/logger.js";
@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use(logger);
 
-app.use("/auth", authRoute);
+app.use("/auth", authRouter);
 
 
 
