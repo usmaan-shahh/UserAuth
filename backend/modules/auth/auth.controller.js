@@ -1,11 +1,11 @@
 import { cookieOptions } from '../../utils/cookieOptions.js'
-import * as userService from './user.service.js'
+import * as authService from './auth.service.js'
 
 export const register = async (request, response, next) => {
 
   try {
 
-    const tokens = await userService.registerUser(request.body);
+    const tokens = await authService.registerUser(request.body);
 
     response.cookie('jwt', tokens.refreshToken, cookieOptions)
 
@@ -23,18 +23,23 @@ export const register = async (request, response, next) => {
 
 export const login = async (req, res, next) => {
 
-  const tokens = await userService.loginUser(req.body);
+  try {
 
-  res.cookie("jwt", tokens.refreshToken, cookieOptions);
+    const tokens = await authService.loginUser(req.body);
 
-  return res.status(200).json({
+    res.cookie("jwt", tokens.refreshToken, cookieOptions);
 
-    message: "Login successful", accessToken: tokens.accessToken
+    return res.status(200).json({
 
-  });
+      message: "Login successful", accessToken: tokens.accessToken
 
+    });
 
+  } catch (err) {
 
+    next(err);
+
+  }
 
 }
 

@@ -1,7 +1,8 @@
 import bcrypt from 'bcryptjs'
-import User from './user.model.js'
+import AuthUser from './auth.model.js'
 import { generateTokens } from '../../utils/generateTokens.js'
 import { AuthRepository } from './auth.repository.js'
+import { DuplicateUserError, InvalidCredentialsError } from './auth.errors.js'
 
 export const registerUser = async ({ username, password }) => {
 
@@ -13,7 +14,7 @@ export const registerUser = async ({ username, password }) => {
 
   const hashedPwd = await bcrypt.hash(password, 10)
 
-  const user = await AuthRepository.create({
+  const user = await AuthRepository.createUser({
     username,
     password: hashedPwd
   })
@@ -24,15 +25,15 @@ export const registerUser = async ({ username, password }) => {
 
 export const loginUser = async ({ username, password }) => {
 
-  const foundUser = await User.findOne({ username }).exec()
+  const foundUser = await AuthUser.findOne({ username }).select('+password').exec()
 
   if (!foundUser) {
-    return res.status(401).json({ message: 'Unauthorized' })
+    throw new InvalidCredentialsError()
   }
 
   const match = await bcrypt.compare(password, foundUser.password)
 
-  if (!match) return res.status(401).json({ message: 'Unauthorized' })
+  if (!match) throw new InvalidCredentialsError()
 
   return generateTokens(foundUser)
 }
