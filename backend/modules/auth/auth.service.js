@@ -5,11 +5,11 @@ import { AuthRepository } from './auth.repository.js'
 
 export const registerUser = async ({ username, password }) => {
 
-    const found = await AuthRepository.findByUsername(username)
+  const found = await AuthRepository.findByUsername(username)
 
-    if (found) {
-      throw new DuplicateUserError()
-    }
+  if (found) {
+    throw new DuplicateUserError()
+  }
 
   const hashedPwd = await bcrypt.hash(password, 10)
 
@@ -37,7 +37,7 @@ export const loginUser = async ({ username, password }) => {
   return generateTokens(foundUser)
 }
 
-export const logout = (req, res) => {
+export const logoutUser = (req, res) => {
   const cookies = req.cookies
   if (!cookies?.jwt) return res.sendStatus(204) //No content
   res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true })

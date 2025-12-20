@@ -1,32 +1,64 @@
-import User from './auth.model.js'
+import AuthUser from './auth.model.js'
 
 export class AuthRepository {
 
+
   static findByUsername(username) {
-    return User.findOne({ username })
-      .collation({ locale: 'en', strength: 2 }) // case-insensitive
+    return AuthUser.findOne({ username })
       .lean()
       .exec()
   }
+
+  static findByEmail(email) {
+    return AuthUser.findOne({ email })
+      .lean()
+      .exec()
+  }
+
 
   static findById(id) {
-    return User.findById(id)
+    return AuthUser.findById(id)
       .lean()
       .exec()
   }
 
-  static create(userData) {
-    return User.create(userData)
+
+  static async createUser(userData) {
+    try {
+      return await AuthUser.create(userData)
+    } catch (err) {
+      if (err.code === 11000) {
+        err.isDuplicate = true
+      }
+      throw err
+    }
   }
 
+
   static updatePassword(userId, hashedPassword) {
-    return User.updateOne(
+    return AuthUser.updateOne(
       { _id: userId },
       { $set: { password: hashedPassword } }
     )
   }
 
+  static updateRefreshToken(userId, refreshTokenHash) {
+    return AuthUser.updateOne(
+      { _id: userId },
+      { $set: { refreshTokenHash } }
+    )
+  }
+
+
+  static clearRefreshToken(userId) {
+    return AuthUser.updateOne(
+      { _id: userId },
+      { $unset: { refreshTokenHash: 1 } }
+    )
+  }
+
+
   static deleteById(userId) {
-    return User.deleteOne({ _id: userId })
+    return AuthUser.deleteOne({ _id: userId })
   }
 }
