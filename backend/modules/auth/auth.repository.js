@@ -42,7 +42,7 @@ export class AuthRepository {
     )
   }
 
-  static updateRefreshToken(userId, refreshTokenHash) {
+  static storeRefreshTokenHash(userId, refreshTokenHash) {
     return AuthUser.updateOne(
       { _id: userId },
       { $set: { refreshTokenHash } }

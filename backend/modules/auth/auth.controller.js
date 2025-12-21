@@ -43,9 +43,56 @@ export const login = async (req, res, next) => {
 
 }
 
-export const logout = (req, res) => {
-  const cookies = req.cookies
-  if (!cookies?.jwt) return res.sendStatus(204) //No content
+export const refresh = async (req, res, next) => {
+  
+  try {
+    
+    const refreshToken = req.cookies?.jwt
+
+    if (!refreshToken) {
+      return res.status(401).json({ message: 'Unauthorized' })
+    }
+
+    const tokens = await authService.refreshAccessToken(refreshToken)
+
+    // Set new refresh token in cookie
+    res.cookie('jwt', tokens.refreshToken, cookieOptions)
+
+    // Send new access token
+    return res.status(200).json({
+      message: 'Token refreshed',
+      accessToken: tokens.accessToken
+    })
+
+  } catch (err) {
+    
+    if (err.message === 'UNAUTHORIZED') {
+      return res.status(401).json({ message: 'Unauthorized' })
+    }
+    
+    if (err.message === 'FORBIDDEN') {
+      return res.status(403).json({ message: 'Forbidden' })
+    }
+
+    next(err)
+
+  }
+
+}
+
+export const logout = async (req, res) => {
+  
+  const refreshToken = req.cookies?.jwt
+
+  if (!refreshToken) {
+    return res.sendStatus(204) // No content - already logged out
+  }
+
+  // Revoke token in database
+  await authService.logoutUser(refreshToken)
+
+  // Clear cookie
   res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true })
-  res.json({ message: 'Cookie cleared' })
+  
+  return res.json({ message: 'Logged out successfully' })
 }

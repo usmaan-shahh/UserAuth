@@ -9,6 +9,8 @@ router.post("/register", authController.register);
 
 router.post("/login", loginLimiter, authController.login);
 
+router.get("/refresh", authController.refresh);
+
 router.post("/logout", authController.logout)
 
 
