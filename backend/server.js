@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import connectDB from "./configiration/connectDB.js";
 import authRouter from "./modules/auth/auth.routes.js"
+import userRouter from "./modules/users/user.routes.js"
 import cookieParser from "cookie-parser";
 import errorHandler from "./middleware/errorHandler.js";
 import { logEvents, logger } from "./utils/logger.js";
@@ -26,7 +27,7 @@ app.use(cors(corsOptions));
 app.use(logger);
 
 app.use("/auth", authRouter);
-
+app.use("/users", userRouter);
 
 
 //Global error handler

@@ -1,89 +1,86 @@
 import bcrypt from 'bcryptjs'
-import User from './user.model.js'
-import { generateTokens } from '../../utils/generateTokens.js'
+import AuthUser from '../auth/auth.model.js'
+import { UserRepository } from './user.repository.js'
 
-
-export const refreshToken = (refreshToken) => {
-
-  if (!refreshToken) throw new Error('UNAUTHORIZED')
-
-  jwt.verify(
-    refreshToken,
-    process.env.REFRESH_TOKEN_SECRET,
-    async (err, decoded) => {
-      if (err) throw new Error('FORBIDDEN')
-
-      const foundUser = await User.findOne({ username: decoded.username }).exec()
-
-      if (!foundUser) throw new Error('UNAUTHORIZED')
-      const accessToken = jwt.sign(
-        {
-
-          "username": foundUser.username,
-          "userId": foundUser._id.toString()
-
-        },
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '15m' }
-      )
-
-      res.json({ accessToken })
-    }
-  )
-}
-
-export const updateUser = async (id, payload) => {
-
-  const user = await User.findById(id).exec()
+export const getUserProfile = async (userId) => {
+  
+  const user = await UserRepository.findById(userId)
 
   if (!user) {
-    throw new Error("USER_NOT_FOUND");
+    throw new Error("USER_NOT_FOUND")
   }
 
-  if (payload.username) {
-    const duplicate = await User.findOne({ username: payload.username })
+  // Return user without sensitive fields
+  return {
+    id: user._id,
+    username: user.username,
+    email: user.email,
+    roles: user.roles,
+    isEmailVerified: user.isEmailVerified,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt
+  }
+}
+
+export const updateUser = async (userId, payload) => {
+
+  const user = await AuthUser.findById(userId).exec()
+
+  if (!user) {
+    throw new Error("USER_NOT_FOUND")
+  }
+
+  // Check if username is being changed and if it's already taken
+  if (payload.username && payload.username !== user.username) {
+    const duplicate = await AuthUser.findOne({ username: payload.username })
       .collation({ locale: "en", strength: 2 })
       .lean()
-      .exec();
+      .exec()
+
+    // Prevent updating to a username that already exists
+    if (duplicate && duplicate._id.toString() !== userId) {
+      throw new Error("USERNAME_TAKEN")
+    }
+
+    user.username = payload.username
   }
 
-  // This prevents updating a user to a username that already belongs to another user.
-  if (duplicate && duplicate?._id.toString() !== id) {
-    throw new Error({ message: 'username already taken by another user' })
-  }
-
-  user.username = payload.username;
-
+  // Update password if provided
   if (payload.password) {
     user.password = await bcrypt.hash(payload.password, 10)
   }
 
-  await user.save()
+  // Update email if provided
+  if (payload.email) {
+    user.email = payload.email
+    user.isEmailVerified = false  // Reset verification if email changed
+  }
 
+  const updatedUser = await user.save()
+
+  // Return user without sensitive fields
+  return {
+    id: updatedUser._id,
+    username: updatedUser.username,
+    email: updatedUser.email,
+    roles: updatedUser.roles,
+    isEmailVerified: updatedUser.isEmailVerified
+  }
 }
 
-export const deleteUser = async (req, res) => {
+export const deleteUser = async (userId) => {
 
-  const id = req.userId
-
-
-  if (!id) {
-    return res.status(400).json({ message: 'User ID Required' })
-  }
-
-
-
-  const user = await User.findById(id).exec()
+  const user = await AuthUser.findById(userId).exec()
 
   if (!user) {
-    return res.status(400).json({ message: 'User not found' })
+    throw new Error("USER_NOT_FOUND")
   }
 
-  const result = await user.deleteOne()
+  await user.deleteOne()
 
-  const reply = `Username ${result.username} with ID ${result._id} deleted`
-
-  res.json(reply)
+  return {
+    message: `User ${user.username} deleted successfully`
+  }
 }
 
 

@@ -1,49 +1,65 @@
-import { cookieOptions } from '../../utils/cookieOptions.js'
 import * as userService from './user.service.js'
 
+export const getProfile = async (req, res, next) => {
+  try {
+    const userId = req.auth.userId  // From verifyJWT middleware
+
+    const user = await userService.getUserProfile(userId)
+
+    return res.status(200).json({
+      profile: user
+    })
+
+  } catch (err) {
+    if (err.message === "USER_NOT_FOUND") {
+      return res.status(404).json({ message: "User not found" })
+    }
+
+    next(err)
+  }
+}
 
 export const updateUser = async (req, res, next) => {
   try {
-    const result = await updateUser(req.userId, req.body);
+    const userId = req.auth.userId  // From verifyJWT middleware
 
-    res.json({
-      message: `${result.username} updated`
-    });
+    const result = await userService.updateUser(userId, req.body)
+
+    return res.status(200).json({
+      message: "User updated successfully",
+      user: result
+    })
+
   } catch (err) {
     if (err.message === "USER_NOT_FOUND") {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" })
     }
 
     if (err.message === "USERNAME_TAKEN") {
-      return res.status(409).json({ message: "Username already taken" });
+      return res.status(409).json({ message: "Username already taken" })
     }
 
-    next(err);
+    next(err)
   }
-};
+}
 
-export const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res, next) => {
+  try {
+    const userId = req.auth.userId  // From verifyJWT middleware
 
-  const id = req.userId
+    await userService.deleteUser(userId)
 
+    return res.status(200).json({
+      message: "User deleted successfully"
+    })
 
-  if (!id) {
-    return res.status(400).json({ message: 'User ID Required' })
+  } catch (err) {
+    if (err.message === "USER_NOT_FOUND") {
+      return res.status(404).json({ message: "User not found" })
+    }
+
+    next(err)
   }
-
-
-
-  const user = await User.findById(id).exec()
-
-  if (!user) {
-    return res.status(400).json({ message: 'User not found' })
-  }
-
-  const result = await user.deleteOne()
-
-  const reply = `Username ${result.username} with ID ${result._id} deleted`
-
-  res.json(reply)
 }
 
 
