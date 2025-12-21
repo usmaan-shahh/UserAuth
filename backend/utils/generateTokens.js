@@ -8,7 +8,7 @@ export const generateTokens = ({ _id, username }) => {
     }
 
     return {
-        accessToken: jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' }),
-        refreshToken: jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' })
+        accessToken: jwt.sign(payload, process.env.accessTokenSecret, { expiresIn: '13m' }),
+        refreshToken: jwt.sign(payload, process.env.refreshTokenSecret, { expiresIn: '1d' })
     }
 }

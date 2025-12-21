@@ -27,13 +27,13 @@ export const login = async (req, res, next) => {
 
     const tokens = await authService.loginUser(req.body);
 
-    res.cookie("jwt", tokens.refreshToken, cookieOptions);
+  res.cookie("jwt", tokens.refreshToken, cookieOptions);
 
-    return res.status(200).json({
+  return res.status(200).json({
 
-      message: "Login successful", accessToken: tokens.accessToken
+    message: "Login successful", accessToken: tokens.accessToken
 
-    });
+  });
 
   } catch (err) {
 

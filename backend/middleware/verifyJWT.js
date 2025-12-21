@@ -12,14 +12,14 @@ const verifyJWT = (req, res, next) => {
   jwt.verify(
     token,
 
-    process.env.ACCESS_TOKEN_SECRET,
+    process.env.SECRET_KEY,
 
     (error, decoded) => {
       if (error) return res.status(403).json({ message: "Forbidden" });
 
       req.auth = {
-        user: decoded.username,
-        userId: decoded.userId,
+        user: decoded.username, 
+        userId: decoded.userId, 
       };
 
       next();
@@ -28,3 +28,5 @@ const verifyJWT = (req, res, next) => {
 };
 
 export default verifyJWT;
+
+

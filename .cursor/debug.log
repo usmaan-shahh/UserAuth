@@ -1,0 +1,2 @@
+{"location":"server.js:6","message":"Environment variables check","data":{"hasAccessSecret":false,"hasRefreshSecret":true,"hasPort":true,"accessSecretLength":0,"refreshSecretLength":3},"timestamp":1766324001386,"sessionId":"debug-session","hypothesisId":"A,B"}
+{"location":"server.js:6","message":"Environment variables check","data":{"hasAccessSecret":false,"hasRefreshSecret":true,"hasPort":true,"accessSecretLength":0,"refreshSecretLength":3},"timestamp":1766324007816,"sessionId":"debug-session","hypothesisId":"A,B"}

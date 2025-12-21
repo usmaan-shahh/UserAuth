@@ -3,6 +3,7 @@ import AuthUser from './auth.model.js'
 import { generateTokens } from '../../utils/generateTokens.js'
 import { AuthRepository } from './auth.repository.js'
 import { DuplicateUserError, InvalidCredentialsError } from './auth.errors.js'
+import bcrypt from 'bcryptjs'
 
 export const registerUser = async ({ username, password }) => {
 
@@ -56,7 +57,7 @@ export const refreshAccessToken = async (refreshToken) => {
   }
 
   // 1. Verify JWT signature and expiration
-  const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+  const decoded = jwt.verify(refreshToken, process.env.refreshTokenSecret)
 
   // 2. Get user from database with refresh token hash
   const user = await AuthUser.findById(decoded.userId).select('+refreshTokenHash').exec()
