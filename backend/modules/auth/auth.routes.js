@@ -1,11 +1,13 @@
 import express from "express";
 import * as authController from "./auth.controller.js";
 import { loginLimiter } from "../../middleware/index.js"
+import { validate } from "middleware/validate.js";
+import { registerSchema } from "./auth.schema.js";
 
 
 const router = express.Router();
 
-router.post("/register", authController.register);
+router.post("/register", validate(registerSchema), authController.register);
 
 router.post("/login", loginLimiter, authController.login);
 
