@@ -92,7 +92,7 @@ export const logoutUser = async (refreshToken) => {
 
   try {
     // Verify token to get userId
-    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+    const decoded = jwt.verify(refreshToken, process.env.refreshTokenSecret)
     
     // REVOKE: Delete hash from database
     await AuthRepository.clearRefreshToken(decoded.userId)

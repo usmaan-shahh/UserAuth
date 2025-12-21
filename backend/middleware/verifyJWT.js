@@ -12,10 +12,13 @@ const verifyJWT = (req, res, next) => {
   jwt.verify(
     token,
 
-    process.env.SECRET_KEY,
+    process.env.accessTokenSecret,
 
     (error, decoded) => {
-      if (error) return res.status(403).json({ message: "Forbidden" });
+      if (error) {
+        console.error('JWT Verification Error:', error.message);
+        return res.status(403).json({ message: "Forbidden" });
+      }
 
       req.auth = {
         user: decoded.username, 
