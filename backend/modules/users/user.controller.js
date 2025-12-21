@@ -2,21 +2,6 @@ import { cookieOptions } from '../../utils/cookieOptions.js'
 import * as userService from './user.service.js'
 
 
-export const refresh = async (req, res, next) => {
-  try {
-    const accessToken = await userService.refreshToken(req.cookies?.jwt);
-    res.json({ accessToken });
-  } catch (err) {
-    if (err.message === "UNAUTHORIZED") {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    if (err.message === "FORBIDDEN") {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-    next(err);
-  }
-};
-
 export const updateUser = async (req, res, next) => {
   try {
     const result = await updateUser(req.userId, req.body);
