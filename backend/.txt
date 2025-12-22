@@ -1,3 +1,39 @@
 The Zod Middleware validate's incoming request data using Zod schemas before the request reaches the controller.
 
 jwt.verify(token, SECRET) // 1. Verify token signature and expiration 
+
+Accept: application/json   	         “Send me JSON”
+Content-Type: application/json 	     “I am sending JSON to you”
+
+
+req.accepts("html"); Browser wants HTML
+req.accepts("json"); API Clients want JSON
+
+
+In Express, next() normally means:
+"Go to the next middleware or route."
+
+But when you pass an error inside it: next(error);
+send this error object to the global error handler."
+
+origin: (origin, callback) => { ... } This Fn is provided by the CORS library internally.
+
+Without credentials: true, Authorization headers, Sessions, Cookies  will NOT be sent or received. This completely breaks any authentication system.
+
+// Global error handler function signature: It has 4 parameters: (error, request, response, next) and ALWAYS placed at the bottom of server.js, after all routes:
+
+preflight requests: A preflight request is a request sent automatically by the browser, without any sensitive data, to check:
+                    “Is this origin allowed to make this type of request?”
+
+Correct Middleware Stack Execution Order
+1.) CORS: Should be first because it handles preflight(OPTIONS) request
+2.) app.use(express.json()); This middleware parses JSON data from the request body and makes them available in req.body.
+3.) app.use(cookieParser()); This middleware parses cookies sent by the browser and makes them available in req.cookies.
+4.) Log Every Request using logger  to log file
+5.) Security middleware like Rate limiting
+6.) Routes
+7.) 404 Handler (after routes, before error handler)
+8.) Error Handler - LAST (catches all errors)
+
+
+On Every incomming request CORS middleware is triggered and CORS calls your origin function
