@@ -10,7 +10,6 @@ export const getUserProfile = async (userId) => {
     throw new Error("USER_NOT_FOUND")
   }
 
-  // Return user without sensitive fields
   return {
     id: user._id,
     username: user.username,
