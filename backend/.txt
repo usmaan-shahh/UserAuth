@@ -35,9 +35,7 @@ Correct Middleware Stack Execution Order
 7.) 404 Handler (after routes, before error handler)
 8.) Error Handler - LAST (catches all errors)
 
-
-On Every incomming request CORS middleware is triggered and CORS calls your origin function
-
+On Every incomming request CORS middleware is triggered and CORS calls your origin function:
 A controller is responsible only for HTTP concerns, not business logic.
 It handles:
 1.) Request & Response objects: Extracts data from req and sends data via res
@@ -47,13 +45,11 @@ It handles:
 5.) Request data parsing: req.body, req.query, req.params
 6.) Response formatting: JSON, HTML, plain text, redirects
 
-
-Throws domain-specific errors
-Calls database layer but does not know how HTTP works
-Password hashing
-Token generation
-Permission checks
-handle's Business logic like
-1.) “Can this user register?”
-2.) “What happens after login?”
-completely independent of HTTP.
+ Service's Handle Business logic like (Can This User Register) (What Happens After Login) and is completely independent of HTTP.
+ Throws domain-specific errors that we have defined in error's.js
+ A service does NOT talk to the database directly. Instead, it communicates with the database  through repositories or models
+ Hashes Password's
+ Generate Tokens
+ 
+CORS Configuration: Security rules that control which websites can access your API.
+For cross-origin requests, both the browser (client) and the server must explicitly allow credentials for cookies to be exchanged.
