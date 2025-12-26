@@ -21,12 +21,8 @@ const PORT = process.env.PORT;
 const app = express();
 connectDB();
 
-// Morgan HTTP request logging
-if (process.env.NODE_ENV === 'production') {
-  app.use(morgan('combined', { stream: morganStream }));
-} else {
-  app.use(morgan('dev', { stream: morganStream }));
-}
+// Morgan HTTP request logging (custom format without color codes)
+app.use(morgan(':method :url :status :response-time ms - :res[content-length]', { stream: morganStream }));
 
 app.use(express.json());
 app.use(cookieParser());

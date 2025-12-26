@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import logger from "../utils/logger.js";
 
 const verifyJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -16,7 +17,11 @@ const verifyJWT = (req, res, next) => {
 
     (error, decoded) => {
       if (error) {
-        console.error('JWT Verification Error:', error.message);
+        logger.warn('JWT verification failed', {
+          error: error.message,
+          type: error.name,
+          url: req.url
+        });
         return res.status(403).json({ message: "Forbidden" });
       }
 
