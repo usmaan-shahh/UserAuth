@@ -1,5 +1,5 @@
 import rateLimit from 'express-rate-limit';
-import { logEvents } from '../utils/logger.js';
+import logger from '../utils/logger.js';
 
 const loginLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
@@ -11,9 +11,14 @@ const loginLimiter = rateLimit({
 
 
     handler: (req, res, next, options) => {
-        // Log the event with relevant details
-        const logMsg = `Too Many Requests: ${options.message.message}\t${req.method}\t${req.originalUrl}\t${req.ip}\t${req.headers.origin || '-'}`;
-        logEvents(logMsg, 'errLog.log');
+        // Log the rate limit event with Winston
+        logger.warn('Rate limit exceeded:', {
+            message: options.message.message,
+            method: req.method,
+            url: req.originalUrl,
+            ip: req.ip,
+            origin: req.headers.origin || 'unknown'
+        });
 
         // Send the configured response
         res.status(options.statusCode).send(options.message);

@@ -5,9 +5,10 @@ import authRouter from "./modules/auth/auth.routes.js"
 import userRouter from "./modules/users/user.routes.js"
 import cookieParser from "cookie-parser";
 import errorHandler from "./middleware/errorHandler.js";
-import { logEvents, logger } from "./utils/logger.js";
+import logger, { morganStream } from "./utils/logger.js";
 import corsOptions from "./configiration/corsOption.js";
 import cors from "cors";
+import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -20,11 +21,16 @@ const PORT = process.env.PORT;
 const app = express();
 connectDB();
 
+// Morgan HTTP request logging
+if (process.env.NODE_ENV === 'production') {
+  app.use(morgan('combined', { stream: morganStream }));
+} else {
+  app.use(morgan('dev', { stream: morganStream }));
+}
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));
-app.use(logger);
 
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
@@ -47,15 +53,19 @@ app.use((req, res) => {
 
 //Never start the server before DB connection is successful.
 mongoose.connection.once('open', () => {
-  console.log('Connected to MongoDB');
+  logger.info('Connected to MongoDB');
   app.listen(PORT, function () {
-    console.log(`Server is running on ${PORT}`);
+    logger.info(`Server is running on port ${PORT}`);
   });
 });
 
 //Listens for any MongoDB connection error.
 mongoose.connection.on('error', (err) => {
-  console.log(err);
-  logEvents(`${err.no}: ${err.code}\t${err.syscall}\t${err.hostname}`, 'mongoErrLog.log')
+  logger.error('MongoDB connection error:', {
+    code: err.code,
+    syscall: err.syscall,
+    hostname: err.hostname,
+    error: err.message
+  });
 });
 

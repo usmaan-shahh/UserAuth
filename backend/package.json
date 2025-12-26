@@ -21,7 +21,9 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.20.2",
     "mongoose-sequence": "^6.0.1",
+    "morgan": "^1.10.1",
     "uuid": "^13.0.0",
+    "winston": "^3.19.0",
     "zod": "^4.1.13"
   },
   "devDependencies": {

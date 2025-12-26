@@ -96,6 +96,7 @@ export const logoutUser = async (refreshToken) => {
     
     // REVOKE: Delete hash from database
     await AuthRepository.clearRefreshToken(decoded.userId)
+    
   } catch (err) {
     // Token invalid or expired, ignore error
     // Still proceed with cookie clearing

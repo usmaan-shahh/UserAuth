@@ -1,46 +1,77 @@
-import { format } from "date-fns";
-import { v4 as uuid } from "uuid";
-import fs from "fs";
-import fsPromises from "fs/promises";
-import path from "path";
-import { fileURLToPath } from "url";
-
+import winston from 'winston';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// logEvents is a function that writes information to a log file.
-export const logEvents = async (message, logFileName) => {
+// Define log format
+const logFormat = winston.format.combine(
+  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+  winston.format.errors({ stack: true }),
+  winston.format.splat(),
+  winston.format.json()
+);
 
-    const dateTime = format(new Date(), "yyyyMMdd\tHH:mm:ss");
-
-    const logItem = `${dateTime}\t${uuid()}\t${message}\n`;
-
-    try {
-        const logsFolder = path.join(__dirname, "..", "logs");
-
-        // Check if logs folder exists
-        if (!fs.existsSync(logsFolder)) {
-            await fsPromises.mkdir(logsFolder);
-        }
-
-        // Append the log entry into the file
-        await fsPromises.appendFile(
-            path.join(logsFolder, logFileName),
-            logItem
-        );
-
-    } catch (err) {
-        console.error("Logging error:", err);
+// Console format for development (more readable)
+const consoleFormat = winston.format.combine(
+  winston.format.colorize(),
+  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+  winston.format.printf(({ timestamp, level, message, ...meta }) => {
+    let msg = `${timestamp} [${level}]: ${message}`;
+    if (Object.keys(meta).length > 0) {
+      msg += ` ${JSON.stringify(meta)}`;
     }
+    return msg;
+  })
+);
+
+// Create Winston logger
+const logger = winston.createLogger({
+  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+  format: logFormat,
+  transports: [
+    // Error logs
+    new winston.transports.File({
+      filename: path.join(__dirname, '..', 'logs', 'error.log'),
+      level: 'error',
+      maxsize: 5242880, // 5MB
+      maxFiles: 5,
+    }),
+    // All logs
+    new winston.transports.File({
+      filename: path.join(__dirname, '..', 'logs', 'combined.log'),
+      maxsize: 5242880, // 5MB
+      maxFiles: 5,
+    }),
+  ],
+  exceptionHandlers: [
+    new winston.transports.File({
+      filename: path.join(__dirname, '..', 'logs', 'exceptions.log'),
+    }),
+  ],
+  rejectionHandlers: [
+    new winston.transports.File({
+      filename: path.join(__dirname, '..', 'logs', 'rejections.log'),
+    }),
+  ],
+});
+
+// Add console transport for non-production
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(
+    new winston.transports.Console({
+      format: consoleFormat,
+    })
+  );
+}
+
+// Stream for Morgan
+export const morganStream = {
+  write: (message) => {
+    // Remove trailing newline that morgan adds
+    logger.http(message.trim());
+  },
 };
 
-// Logger is the Express middleware that runs on every incoming request.
-export const logger = (request, __, next) => {
-    // It extracts request information and calls the logEvents function to log it.
-    logEvents(
-        `${request.method}\t${request.url}\t${request.headers.origin}`,
-        "reqLog.log"
-    );
-    next();
-};
+export default logger;

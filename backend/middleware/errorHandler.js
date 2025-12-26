@@ -1,8 +1,16 @@
-import { logEvents } from '../utils/logger.js';
+import logger from '../utils/logger.js';
 
 const errorHandler = (error, req, res, __) => {
 
-    logEvents(`${error.name}: ${error.message}\t${req.method}\t${req.url}\t${req.headers.origin}`, 'errLog.log')
+    // Log error with Winston
+    logger.error('Request error:', {
+        name: error.name,
+        message: error.message,
+        method: req.method,
+        url: req.url,
+        origin: req.headers.origin,
+        stack: error.stack
+    });
 
     const status = error.statusCode || res.statusCode || 500 // server error 
 
