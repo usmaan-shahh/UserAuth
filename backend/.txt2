@@ -16,7 +16,7 @@ exceptionHandlers: Catches uncaught exceptions and logs them instead of silently
 rejectionHandlers: Logs unhandled promise rejections automatically.
 
 
-Morgan collects request and response metaData, formats it using tokens, and then send log's to Winston for storage. 
+Morgan collects request and response metaData, formats it, and then send log's to Winston for storage. 
 
   error    ---(0)   
   warn     ---(1)
