@@ -1,0 +1,16 @@
+level: 'debug' means All logs will be captured, including:
+
+logger.debug()
+logger.info()
+logger.warn()
+logger.error()
+
+Each transport is a destination where logs go
+
+logFormat: how log's  are structured before being written to files.
+
+Because no level is specified, Logs ALL log levels into one file.
+level: "error",  Logs ONLY error-level logs to error.log.
+
+exceptionHandlers: Catches uncaught exceptions and logs them instead of silently crashing.
+rejectionHandlers: Logs unhandled promise rejections automatically.

@@ -3,9 +3,9 @@ import logger from '../utils/logger.js';
 const errorHandler = (error, req, res, __) => {
 
     // Log error with Winston
-    logger.error('Request error:', {
-        name: error.name,
-        message: error.message,
+    logger.error('Request error', {
+        errorName: error.name,
+        errorMessage: error.message,
         method: req.method,
         url: req.url,
         origin: req.headers.origin,
