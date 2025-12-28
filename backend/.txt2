@@ -14,3 +14,14 @@ level: "error",  Logs ONLY error-level logs to error.log.
 
 exceptionHandlers: Catches uncaught exceptions and logs them instead of silently crashing.
 rejectionHandlers: Logs unhandled promise rejections automatically.
+
+
+Morgan intercepts every HTTP request, collect's request/response metadata, formats it, and then Morgan send log's to Winston for storage.
+
+error   (0)   
+warn    (1)
+info    (2)
+http    (3)
+verbose (4) 
+debug   (5)
+silly   (6) 

@@ -21,8 +21,8 @@ const PORT = process.env.PORT;
 const app = express();
 connectDB();
 
-// Morgan HTTP request logging (Apache combined format)
-app.use(morgan('combined', { stream: morganStream }));
+
+app.use(morgan(':method :url :status :response-time ms', { stream: morganStream }));
 
 app.use(express.json());
 app.use(cookieParser());

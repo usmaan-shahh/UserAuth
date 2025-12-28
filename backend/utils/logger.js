@@ -10,6 +10,7 @@ const LOG_DIR = path.join(__dirname, '..', 'logs');
 const MAX_SIZE = 5 * 1024 * 1024;
 const MAX_FILES = 5;
 
+
 const errorFileTransport = new winston.transports.File({
   filename: path.join(LOG_DIR, 'error.log'),
   level: 'error',
@@ -40,6 +41,7 @@ const logFormat = winston.format.combine(
 );
 
 const logger = winston.createLogger({
+
   level: 'debug',
   format: logFormat,
 
@@ -55,6 +57,7 @@ const logger = winston.createLogger({
   rejectionHandlers: [
     rejectionFileHandler,
   ],
+
 });
 
 

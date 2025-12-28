@@ -2,7 +2,7 @@ import logger from '../utils/logger.js';
 
 const errorHandler = (error, req, res, __) => {
 
-    // Log error with Winston
+    
     logger.error('Request error', {
         errorName: error.name,
         errorMessage: error.message,
