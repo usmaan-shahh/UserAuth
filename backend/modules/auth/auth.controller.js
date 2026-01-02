@@ -80,19 +80,22 @@ export const refresh = async (req, res, next) => {
 
 }
 
-export const logout = async (req, res) => {
+export const logout = async (req, res, next) => {
   
-  const refreshToken = req.cookies?.jwt
+  try {
+    const refreshToken = req.cookies?.jwt
 
-  if (!refreshToken) {
-    return res.sendStatus(204) // No content - already logged out
+    if (!refreshToken) {
+      return res.sendStatus(204)
+    }
+
+    await authService.logoutUser(refreshToken)
+
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true })
+    
+    return res.json({ message: 'Logged out successfully' })
+    
+  } catch (err) {
+    next(err)  
   }
-
-  // Revoke token in database
-  await authService.logoutUser(refreshToken)
-
-  // Clear cookie
-  res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true })
-  
-  return res.json({ message: 'Logged out successfully' })
 }

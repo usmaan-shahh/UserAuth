@@ -5,10 +5,8 @@ jwt.verify(token, SECRET) // 1. Verify token signature and expiration
 Accept: application/json   	         “Send me JSON”
 Content-Type: application/json 	     “I am sending JSON to you”
 
-
 req.accepts("html"); Browser wants HTML
 req.accepts("json"); API Clients want JSON
-
 
 In Express, next() normally means:
 "Go to the next middleware or route."
@@ -51,11 +49,7 @@ It handles:
 
 
 When both client and server  has different origins.
-
 CORS allow's client to read response from server.
-
 CORS configuration defines security rules that control which origins (websites) are allowed to read a server’s response in the browser.
-
 Both the browser (client) and the server must explicitly allow credentials for cookies to be exchanged.
-
 CSRF(Cross-Site Request Forgery) prevent's unwanted actions by requiring a CSRF token along with the cookies in each state-changing request.

@@ -1,12 +1,12 @@
 import express from "express";
 import "dotenv/config";
-import connectDB from "./configiration/connectDB.js";
+import connectDB from "./configuration/connectDB.js";
 import authRouter from "./modules/auth/auth.routes.js"
 import userRouter from "./modules/users/user.routes.js"
 import cookieParser from "cookie-parser";
 import errorHandler from "./middleware/errorHandler.js";
 import logger, { morganStream } from "./utils/logger.js";
-import corsOptions from "./configiration/corsOption.js";
+import corsOptions from "./configuration/corsOption.js";
 import cors from "cors";
 import morgan from "morgan";
 import path from "path";

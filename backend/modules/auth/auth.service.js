@@ -35,7 +35,9 @@ export const loginUser = async ({ username, password }) => {
   const foundUser = await AuthUser.findOne({ username }).select('+password').exec()
 
   if (!foundUser) {
+
     throw new InvalidCredentialsError()
+    
   }
 
   const match = await bcrypt.compare(password, foundUser.password)
@@ -56,17 +58,17 @@ export const refreshAccessToken = async (refreshToken) => {
     throw new Error('UNAUTHORIZED')
   }
 
-  // 1. Verify JWT signature and expiration
+
   const decoded = jwt.verify(refreshToken, process.env.refreshTokenSecret)
 
-  // 2. Get user from database with refresh token hash
+
   const user = await AuthUser.findById(decoded.userId).select('+refreshTokenHash').exec()
   
   if (!user || !user.refreshTokenHash) {
     throw new Error('FORBIDDEN')
   }
 
-  // 3. Validate refresh token against stored hash
+
   const isValid = await bcrypt.compare(refreshToken, user.refreshTokenHash)
   
   if (!isValid) {
@@ -87,7 +89,7 @@ export const refreshAccessToken = async (refreshToken) => {
 export const logoutUser = async (refreshToken) => {
   
   if (!refreshToken) {
-    return // Already logged out
+    return 
   }
 
   try {

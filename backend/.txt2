@@ -27,11 +27,12 @@ Morgan collects request and response metaData, formats it, and then send log's t
   silly    ---(6) 
 
 
-  An API is a broader contract that defines what must be exposed and exchanged during the request–response cycle.
+An API is a contract that defines what must be exposed and exchanged during the request–response cycle, without exposing implementation.
 
-  HTTP provides the syntax and transport rules for requests and responses, while REST provides the semantics - how HTTP methods and resources should be interpreted.
+HTTP provides the syntax and transport rules for requests and responses between a client and a server., while REST provides the semantics - how HTTP methods and resources should be interpreted by the server.
 
-  REST ful APIs follow REST principles that define how APIs should be designed using resource-based URLs, being stateless, and leveraging standard HTTP methods, status codes, and headers.
+RESTful APIs follow REST principles that define how APIs should be designed using resource-based URLs,  stateless communication, and leveraging standard HTTP methods, status codes, and headers.
+
 
 
 
