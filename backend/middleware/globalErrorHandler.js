@@ -1,6 +1,6 @@
 import logger from '../utils/logger.js';
 
-    const errorHandler = (errorObject, requestObject, responseObject, next) => {
+    const globalErrorHandler = (errorObject, requestObject, responseObject, next) => {
     
     logger.error(`Error in ${requestObject.method} ${requestObject.url}`, 
     {
@@ -14,7 +14,7 @@ import logger from '../utils/logger.js';
     
     });
 
-    const status = errorObject.statusCode || responseObject.statusCode || 500 // server error 
+    const status = errorObject.statusCode || responseObject.statusCode || 500 
 
     responseObject.status(status)
 
@@ -22,7 +22,7 @@ import logger from '../utils/logger.js';
 
             }
 
-export default errorHandler;
+export default globalErrorHandler;
 
 
 

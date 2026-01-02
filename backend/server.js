@@ -4,7 +4,7 @@ import connectDB from "./configuration/connectDB.js";
 import authRouter from "./modules/auth/auth.routes.js"
 import userRouter from "./modules/users/user.routes.js"
 import cookieParser from "cookie-parser";
-import errorHandler from "./middleware/errorHandler.js";
+import globalErrorHandler from "./middleware/globalErrorHandler.js";
 import logger, { morganStream } from "./utils/logger.js";
 import corsOptions from "./configuration/corsOption.js";
 import cors from "cors";
@@ -33,7 +33,7 @@ app.use("/users", userRouter);
 
 
 //Global error handler
-app.use(errorHandler);
+  app.use(globalErrorHandler); // Always placed at the bottom of server.js, after all routes
 
 //When no route matches the incoming request in your Express app
 app.use((req, res) => {
