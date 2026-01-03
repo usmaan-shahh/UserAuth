@@ -1,9 +1,8 @@
-import { logLevel } from 'winston';
 import logger from '../utils/logger.js';
 
     const globalErrorHandler = (errorObject, requestObject, responseObject, next) => {
     
-    logger[logLevel](`Error in ${requestObject.method} ${requestObject.url}`, 
+    logger[level](`Error in ${requestObject.method} ${requestObject.url}`, 
 
     {
         errorName: errorObject.name,

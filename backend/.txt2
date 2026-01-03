@@ -35,4 +35,19 @@ RESTful APIs follow REST principles that define how APIs should be designed usin
 
 
 
+GlobalErrorHandler:
+
+Implemented Centralised Errror Handler for all errors.
+Shows which endpoint failed
+Integrated Winston so all errors are logged to file.
+User Agent: browser Or Automated Bot (What Tools They Used)
+Their IP Address
+Method Used
+TimeStamps
+
+
+
+
+
+
 
