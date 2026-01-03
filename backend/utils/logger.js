@@ -42,7 +42,7 @@ const logFormat = winston.format.combine(
 
 const logger = winston.createLogger({
 
-  level: 'debug',
+  level: 'debug', 
   format: logFormat,
 
   transports: [
