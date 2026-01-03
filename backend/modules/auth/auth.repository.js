@@ -1,8 +1,7 @@
 import AuthUser from './auth.model.js'
 
 export class AuthRepository {
-
-
+  
   static findByUsername(username) {
     return AuthUser.findOne({ username })
       .lean()

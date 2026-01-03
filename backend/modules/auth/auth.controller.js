@@ -1,7 +1,7 @@
 import { cookieOptions } from '../../utils/cookieOptions.js'
 import * as authService from './auth.service.js'
 
-export const register = async (request, response, next) => {
+  export const register = async (request, response, next) => {
 
   try {
 
@@ -9,9 +9,7 @@ export const register = async (request, response, next) => {
 
     response.cookie('jwt', tokens.refreshToken, cookieOptions)
 
-    return response.status(201).json({
-      message: "Signup successful", accessToken: tokens.accessToken
-    });
+    return response.status(201).json({ message: "Signup successful", accessToken: tokens.accessToken });
 
   } catch (err) {
 
@@ -19,7 +17,7 @@ export const register = async (request, response, next) => {
 
   }
 
-}
+  }
 
 export const login = async (req, res, next) => {
 
