@@ -1,0 +1,83 @@
+### Device-Based Refresh Token Testing
+### Use with REST Client extension in VS Code or similar tools
+
+@baseUrl = http://localhost:3000/api/auth
+@accessToken = YOUR_ACCESS_TOKEN_HERE
+
+### 1. Register a new user
+POST {{baseUrl}}/register
+Content-Type: application/json
+
+{
+  "username": "testuser123",
+  "password": "TestPass123!",
+  "deviceName": "My Test Device"
+}
+
+### 2. Login from Device 1 (Desktop)
+POST {{baseUrl}}/login
+Content-Type: application/json
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+{
+  "username": "testuser123",
+  "password": "TestPass123!",
+  "deviceName": "My Windows PC"
+}
+
+### 3. Login from Device 2 (Mobile)
+POST {{baseUrl}}/login
+Content-Type: application/json
+User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1
+
+{
+  "username": "testuser123",
+  "password": "TestPass123!",
+  "deviceName": "My iPhone"
+}
+
+### 4. Login from Device 3 (Tablet)
+POST {{baseUrl}}/login
+Content-Type: application/json
+User-Agent: Mozilla/5.0 (iPad; CPU OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1
+
+{
+  "username": "testuser123",
+  "password": "TestPass123!",
+  "deviceName": "My iPad"
+}
+
+### 5. Refresh Access Token
+GET {{baseUrl}}/refresh
+
+### 6. Get All Active Sessions (Protected - requires access token)
+GET {{baseUrl}}/sessions
+Authorization: Bearer {{accessToken}}
+
+### 7. Revoke Specific Session (replace SESSION_ID with actual ID from step 6)
+DELETE {{baseUrl}}/sessions/SESSION_ID_HERE
+Authorization: Bearer {{accessToken}}
+
+### 8. Revoke All Other Sessions (keeps current session)
+POST {{baseUrl}}/sessions/revoke-all-others
+Authorization: Bearer {{accessToken}}
+
+### 9. Revoke All Sessions (logout from all devices)
+POST {{baseUrl}}/sessions/revoke-all
+Authorization: Bearer {{accessToken}}
+
+### 10. Logout from Current Device
+POST {{baseUrl}}/logout
+
+### Test Suspicious Activity Detection
+### Login from a different location/browser combination
+POST {{baseUrl}}/login
+Content-Type: application/json
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+{
+  "username": "testuser123",
+  "password": "TestPass123!",
+  "deviceName": "Linux Machine"
+}
+

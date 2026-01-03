@@ -51,6 +51,13 @@ GlobalErrorHandler:
 
 
 
+Each document represents one active login session of a user on a specific device.
+
+Step 1: Create RefreshToken Model
+Step 2: Create Device Parser Utility
+
+
+
 
 
 

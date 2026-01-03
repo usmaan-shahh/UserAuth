@@ -33,11 +33,6 @@ const authSchema = new mongoose.Schema(
         isEmailVerified: {
             type: Boolean,
             default: false
-        },
-
-        refreshTokenHash: {
-            type: String,
-            select: false
         }
     },
     {
