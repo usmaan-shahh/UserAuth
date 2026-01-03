@@ -1,9 +1,7 @@
-import logger from '../utils/logger.js';
+    import logger from '../utils/logger.js';
 
-    const globalErrorHandler = (errorObject, requestObject, responseObject, next) => {
-    
+    const globalErrorHandler = (errorObject, requestObject, responseObject, next) => {    
     logger[level](`Error in ${requestObject.method} ${requestObject.url}`, 
-
     {
         errorName: errorObject.name,
         errorMessage: errorObject.message,
@@ -14,14 +12,11 @@ import logger from '../utils/logger.js';
         userAgent: requestObject.headers['user-agent'],
     
     });
-
     const status = errorObject.statusCode || responseObject.statusCode || 500 
-
     responseObject.status(status).json({ message: errorObject.message, isError: true })
+    }
 
-            }
-
-export default globalErrorHandler;
+    export default globalErrorHandler;
 
 
 
