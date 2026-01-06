@@ -1,21 +1,20 @@
-import express from "express"
-import * as userController from "./user.controller.js"
-import { verifyJWT, validate } from "../../middleware/index.js"
-import { updateUserSchema } from "./user.schema.js"
+import express from "express";
+import { validate, verifyJWT } from "../../middleware/index.js";
+import * as userController from "./user.controller.js";
+import { updateUserSchema } from "./user.schema.js";
 
-const router = express.Router()
+const router = express.Router();
 
 // All user routes require authentication
-router.use(verifyJWT)
+router.use(verifyJWT);
 
 // Get current user profile
-router.get("/profile", userController.getProfile)
+router.get("/profile", userController.getProfile);
 
 // Update current user
-router.patch("/profile", validate(updateUserSchema), userController.updateUser)
+router.patch("/profile", validate(updateUserSchema), userController.updateUser);
 
 // Delete current user account
-router.delete("/account", userController.deleteUser)
+router.delete("/account", userController.deleteUser);
 
-export default router
-
+export default router;

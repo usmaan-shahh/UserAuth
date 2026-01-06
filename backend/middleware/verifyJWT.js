@@ -17,24 +17,22 @@ const verifyJWT = (req, res, next) => {
 
     (error, decoded) => {
       if (error) {
-        logger.warn('JWT verification failed', {
+        logger.warn("JWT verification failed", {
           error: error.message,
           type: error.name,
-          url: req.url
+          url: req.url,
         });
         return res.status(403).json({ message: "Forbidden" });
       }
 
       req.auth = {
-        user: decoded.username, 
-        userId: decoded.userId, 
+        user: decoded.username,
+        userId: decoded.userId,
       };
 
       next();
-    }
+    },
   );
 };
 
 export default verifyJWT;
-
-

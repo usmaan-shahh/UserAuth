@@ -1,47 +1,45 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const authSchema = new mongoose.Schema(
-    {
-        username: {
-            type: String,
-            required: true,
-            unique: true,
-            trim: true,
-            lowercase: true,
-
-        },
-
-        email: {
-            type: String,
-            unique: true,
-            sparse: true,          // allows null but enforces uniqueness if email is present
-            lowercase: true,
-            trim: true
-        },
-
-        password: {
-            type: String,
-            required: true,
-            select: false       
-        },
-
-        roles: {
-            type: [String],
-            default: ['User']
-        },
-
-        isEmailVerified: {
-            type: Boolean,
-            default: false
-        }
+  {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
     },
-    {
-        timestamps: true
-    }
-)
 
-export default mongoose.model('AuthUser', authSchema)
+    email: {
+      type: String,
+      unique: true,
+      sparse: true, // allows null but enforces uniqueness if email is present
+      lowercase: true,
+      trim: true,
+    },
 
+    password: {
+      type: String,
+      required: true,
+      select: false,
+    },
+
+    roles: {
+      type: [String],
+      default: ["User"],
+    },
+
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
+
+export default mongoose.model("AuthUser", authSchema);
 
 // Defines the structure of documents in MongoDB
 

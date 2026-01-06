@@ -1,36 +1,25 @@
 import { ZodError } from "zod";
 
- const validate =
-    (schema) =>
-        (req, res, next) => {
+const validate = (schema) => (req, res, next) => {
+  try {
+    schema.parse({
+      body: req.body,
+    });
 
-            try {
+    next();
+  } catch (err) {
+    if (err instanceof ZodError) {
+      const errorMessages = err.issues
+        .map((issue) => issue.message)
+        .filter(Boolean);
 
-                schema.parse({
-                    body: req.body
-                });
-                
-                next();
+      return res.status(400).json({
+        errors: errorMessages,
+      });
+    }
 
-            } catch (err) {
+    next(err);
+  }
+};
 
-                
-                if (err instanceof ZodError) {
-                    const errorMessages = err.issues
-                        .map(issue => issue.message)
-                        .filter(Boolean);
-                    
-                    return res.status(400).json({
-                        errors: errorMessages
-                    });
-                }
-
-                
-                next(err);
-
-            }
-
-        };
-
-
-        export default validate
+export default validate;
