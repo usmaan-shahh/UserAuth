@@ -2,12 +2,10 @@ import { cookieOptions } from '../../utils/cookieOptions.js'
 import * as authService from './auth.service.js'
 import { parseDeviceInfo, getClientIp, getLocationFromIp } from '../../utils/deviceParser.js'
 
-/**
- * Register a new user
- */
+
 export const register = async (request, response, next) => {
   try {
-    // Extract device and location information
+    
     const userAgent = request.headers['user-agent']
     const deviceInfo = parseDeviceInfo(userAgent, request.body.deviceName)
     const ipAddress = getClientIp(request)
@@ -20,7 +18,7 @@ export const register = async (request, response, next) => {
       location
     )
 
-    response.cookie('jwt', tokens.refreshToken, cookieOptions)
+    response.cookie('refresh-token', tokens.refreshToken, cookieOptions)
 
     return response.status(201).json({
       message: "Signup successful",
@@ -31,12 +29,10 @@ export const register = async (request, response, next) => {
   }
 }
 
-/**
- * Login user
- */
+
 export const login = async (req, res, next) => {
   try {
-    // Extract device and location information
+    
     const userAgent = req.headers['user-agent']
     const deviceInfo = parseDeviceInfo(userAgent, req.body.deviceName)
     const ipAddress = getClientIp(req)

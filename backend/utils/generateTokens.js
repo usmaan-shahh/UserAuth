@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import crypto from 'crypto'
 
 export const generateTokens = ({ _id, username }) => {
 
@@ -7,8 +8,12 @@ export const generateTokens = ({ _id, username }) => {
         username,
     }
 
+    // Generate opaque refresh token (random string)
+    const refreshToken = crypto.randomBytes(64).toString('hex')
+
     return {
-        accessToken: jwt.sign(payload, process.env.accessTokenSecret, { expiresIn: '13m' }),
-        refreshToken: jwt.sign(payload, process.env.refreshTokenSecret, { expiresIn: '1d' })
+        accessToken: jwt.sign(payload, process.env.accessTokenSecret, { expiresIn: '15m' }),
+        refreshToken,
+        userId: _id.toString() // Include userId for storing in DB
     }
 }

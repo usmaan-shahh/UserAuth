@@ -6,33 +6,34 @@ import { AuthRepository } from './auth.repository.js'
 import { DuplicateUserError, InvalidCredentialsError } from './auth.errors.js'
 import { detectSuspiciousActivity } from '../../utils/deviceParser.js'
 import bcrypt from 'bcryptjs'
+import { addDays } from 'date-fns'
 
-// Configuration
+
 const MAX_DEVICES_PER_USER = 5
 const REFRESH_TOKEN_EXPIRY_DAYS = 7
 
-/**
- * Register a new user with device tracking
- */
 export const registerUser = async ({ username, password }, deviceInfo, ipAddress, location) => {
+
   const found = await AuthRepository.findByUsername(username)
 
   if (found) {
     throw new DuplicateUserError()
   }
-
   const hashedPwd = await bcrypt.hash(password, 10)
 
   const user = await AuthRepository.createUser({
+    
     username,
     password: hashedPwd
+
   })
 
   const tokens = generateTokens(user)
+  
   const refreshTokenHash = await bcrypt.hash(tokens.refreshToken, 10)
   
-  // Calculate expiry
-  const expiresAt = new Date(Date.now() + REFRESH_TOKEN_EXPIRY_DAYS * 24 * 60 * 60 * 1000)
+  //“This session will die exactly 7 calendar days from now.”
+  const expiresAt = addDays(new Date(), REFRESH_TOKEN_EXPIRY_DAYS)
   
   // First login is never suspicious
   await AuthRepository.storeRefreshToken(
@@ -81,7 +82,7 @@ export const loginUser = async ({ username, password }, deviceInfo, ipAddress, l
   const tokens = generateTokens(foundUser)
   const refreshTokenHash = await bcrypt.hash(tokens.refreshToken, 10)
   
-  const expiresAt = new Date(Date.now() + REFRESH_TOKEN_EXPIRY_DAYS * 24 * 60 * 60 * 1000)
+  const expiresAt = addDays(new Date(), REFRESH_TOKEN_EXPIRY_DAYS)
   
   await AuthRepository.storeRefreshToken(
     foundUser._id,
@@ -102,35 +103,24 @@ export const loginUser = async ({ username, password }, deviceInfo, ipAddress, l
 }
 
 /**
- * Refresh access token using refresh token
+ * Refresh access token using opaque refresh token
  */
 export const refreshAccessToken = async (refreshToken) => {
   if (!refreshToken) {
     throw new Error('UNAUTHORIZED')
   }
 
-  const decoded = jwt.verify(refreshToken, process.env.refreshTokenSecret)
-
-  const user = await AuthUser.findById(decoded.userId).exec()
-  
-  if (!user) {
-    throw new Error('FORBIDDEN')
-  }
-
-  // Hash the incoming token to compare with stored hash
-  const tokenHash = await bcrypt.hash(refreshToken, 10)
-  
-  // Find matching refresh token in database
-  const storedToken = await AuthRepository.findValidRefreshToken(decoded.userId, tokenHash)
+  // Find the token in database by comparing hashes
+  const storedToken = await AuthRepository.findValidRefreshTokenByHash(refreshToken)
   
   if (!storedToken) {
     throw new Error('FORBIDDEN')
   }
 
-  // Verify the token hash matches
-  const isValid = await bcrypt.compare(refreshToken, storedToken.tokenHash)
+  // Get user from the stored token
+  const user = await AuthUser.findById(storedToken.userId).exec()
   
-  if (!isValid) {
+  if (!user) {
     throw new Error('FORBIDDEN')
   }
 
@@ -156,11 +146,8 @@ export const logoutUser = async (refreshToken) => {
   }
 
   try {
-    const decoded = jwt.verify(refreshToken, process.env.refreshTokenSecret)
-    const tokenHash = await bcrypt.hash(refreshToken, 10)
-    
-    // Find and revoke the specific token
-    const storedToken = await AuthRepository.findValidRefreshToken(decoded.userId, tokenHash)
+    // Find and revoke the specific token by comparing hashes
+    const storedToken = await AuthRepository.findValidRefreshTokenByHash(refreshToken)
     
     if (storedToken) {
       await AuthRepository.revokeRefreshToken(storedToken._id)
@@ -218,12 +205,15 @@ export const revokeAllOtherSessions = async (userId, currentRefreshToken) => {
   }
 
   try {
-    const decoded = jwt.verify(currentRefreshToken, process.env.refreshTokenSecret)
-    const tokenHash = await bcrypt.hash(currentRefreshToken, 10)
-    
-    const currentSession = await AuthRepository.findValidRefreshToken(decoded.userId, tokenHash)
+    // Find current session by comparing hashes
+    const currentSession = await AuthRepository.findValidRefreshTokenByHash(currentRefreshToken)
     
     if (!currentSession) {
+      throw new Error('FORBIDDEN')
+    }
+
+    // Verify the session belongs to this user
+    if (currentSession.userId.toString() !== userId.toString()) {
       throw new Error('FORBIDDEN')
     }
     

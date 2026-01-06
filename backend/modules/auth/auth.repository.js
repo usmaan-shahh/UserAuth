@@ -1,5 +1,6 @@
 import AuthUser from './auth.model.js'
 import RefreshToken from './refreshToken.model.js'
+import bcrypt from 'bcryptjs'
 
 export class AuthRepository {
   
@@ -66,7 +67,7 @@ export class AuthRepository {
   }
 
   /**
-   * Find a valid (non-revoked, non-expired) refresh token
+   * Find a valid (non-revoked, non-expired) refresh token by userId and tokenHash
    */
   static async findValidRefreshToken(userId, tokenHash) {
     return await RefreshToken.findOne({
@@ -75,6 +76,30 @@ export class AuthRepository {
       isRevoked: false,
       expiresAt: { $gt: new Date() }
     }).exec()
+  }
+
+  /**
+   * Find a valid refresh token by comparing hashes (for opaque tokens)
+   * Returns the first valid token that matches the provided token
+   */
+  static async findValidRefreshTokenByHash(refreshToken) {
+    // Get all valid tokens
+    const validTokens = await RefreshToken.find({
+      isRevoked: false,
+      expiresAt: { $gt: new Date() }
+    })
+    .populate('userId')
+    .exec()
+
+    // Check each token's hash against the provided token
+    for (const storedToken of validTokens) {
+      const isMatch = await bcrypt.compare(refreshToken, storedToken.tokenHash)
+      if (isMatch) {
+        return storedToken
+      }
+    }
+
+    return null
   }
 
   /**

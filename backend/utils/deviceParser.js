@@ -1,29 +1,25 @@
 import { UAParser } from 'ua-parser-js'
 import geoip from 'geoip-lite'
 
-/**
- * Parse device information from user agent string
- * @param {string} userAgent - User agent string from request
- * @param {string|null} customDeviceName - Optional custom device name from client
- * @returns {object} Device information object
- */
 export const parseDeviceInfo = (userAgent, customDeviceName = null) => {
+
   const parser = new UAParser(userAgent)
-  const result = parser.getResult()
+  const ua = parser.getResult() // Returns an object with the parsed user agent data like browser, os, device, etc.
   
-  // Determine device type
-  let deviceType = 'desktop'
-  if (result.device.type === 'mobile') deviceType = 'mobile'
-  else if (result.device.type === 'tablet') deviceType = 'tablet'
-  else if (result.device.type) deviceType = result.device.type
   
-  // Auto-generate device name if not provided
+  let deviceType = 'desktop'; //  if ua.device?.type is undefined it means it's a desktop device
+  if (ua.device?.type) {
+    deviceType = ua.device.type;
+  }
+  
+
   let deviceName = customDeviceName
   if (!deviceName) {
-    const browser = result.browser.name || 'Unknown Browser'
-    const os = result.os.name || 'Unknown OS'
-    const device = result.device.model || ''
-    
+
+    const browser = ua.browser?.name || 'Unknown Browser'
+    const os = ua.os?.name || 'Unknown Operating System'
+    const device = ua.device?.model || ''
+     
     if (device) {
       deviceName = `${device} (${browser})`
     } else {
@@ -34,22 +30,17 @@ export const parseDeviceInfo = (userAgent, customDeviceName = null) => {
   return {
     deviceName,
     deviceType,
-    browser: result.browser.name || 'Unknown',
-    os: result.os.name || 'Unknown',
+    browser: ua.browser.name || 'Unknown',
+    os: ua.os.name || 'Unknown',
     userAgent
   }
 }
 
-/**
- * Extract client IP address from request
- * @param {object} req - Express request object
- * @returns {string} IP address
- */
+//extract client IP address from request  
 export const getClientIp = (req) => {
-  // Check various headers in order of priority
+  
   const forwarded = req.headers['x-forwarded-for']
   if (forwarded) {
-    // x-forwarded-for can be a comma-separated list
     return forwarded.split(',')[0].trim()
   }
   
@@ -62,12 +53,9 @@ export const getClientIp = (req) => {
   )
 }
 
-/**
- * Get location information from IP address
- * @param {string} ipAddress - IP address
- * @returns {object|null} Location information or null if not found
- */
+//fetch location details (country, region, city, timezone) from ip address
 export const getLocationFromIp = (ipAddress) => {
+
   // Skip for local/private IPs
   if (!ipAddress || ipAddress === 'unknown' || 
       ipAddress.startsWith('127.') || 
@@ -75,7 +63,7 @@ export const getLocationFromIp = (ipAddress) => {
       ipAddress.startsWith('10.') ||
       ipAddress === '::1' ||
       ipAddress === '::ffff:127.0.0.1') {
-    return null
+      return null
   }
   
   // Clean IPv6-mapped IPv4 addresses
@@ -96,13 +84,7 @@ export const getLocationFromIp = (ipAddress) => {
   }
 }
 
-/**
- * Check if login is suspicious based on device and location
- * @param {object} currentDevice - Current device info
- * @param {string} currentIp - Current IP address
- * @param {array} previousSessions - Previous user sessions
- * @returns {object} { isSuspicious: boolean, reason: string }
- */
+//check if login is suspicious based on device and location
 export const detectSuspiciousActivity = (currentDevice, currentIp, previousSessions) => {
   if (!previousSessions || previousSessions.length === 0) {
     // First login is not suspicious
