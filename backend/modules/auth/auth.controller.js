@@ -17,7 +17,7 @@ export const register = async (request, response, next) => {
       request.body,
       deviceInfo,
       ipAddress,
-      location,
+      location
     );
 
     response.cookie("refresh-token", tokens.refreshToken, cookieOptions);
@@ -42,7 +42,7 @@ export const login = async (req, res, next) => {
       req.body,
       deviceInfo,
       ipAddress,
-      location,
+      location
     );
 
     res.cookie("jwt", result.tokens.refreshToken, cookieOptions);
