@@ -47,8 +47,9 @@ app.use((req, res) => {
 });
 
 //Never start the server before DB connection is successful.
-mongoose.connection.once("open", () => {
+mongoose.connection.once("open", async () => {
   logger.info("Connected to MongoDB");
+  await ensureSuperAdminExists();
   app.listen(PORT, () => {
     logger.info(`Server is running on port ${PORT}`);
   });
