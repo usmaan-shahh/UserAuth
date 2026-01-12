@@ -6,7 +6,7 @@ const globalErrorHandler = (
   responseObject,
   next,
 ) => {
-  logger[level](`Error in ${requestObject.method} ${requestObject.url}`, {
+  logger.error(`Error in ${requestObject.method} ${requestObject.url}`, {
     errorName: errorObject.name,
     errorMessage: errorObject.message,
     method: requestObject.method,

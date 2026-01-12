@@ -26,8 +26,10 @@ const authSchema = new mongoose.Schema(
 
     roles: {
       type: [String],
-      default: ["User"],
-    },
+      enum: ["admin", "customer"],
+      default: ["customer"],
+    }
+    ,
 
     isEmailVerified: {
       type: Boolean,

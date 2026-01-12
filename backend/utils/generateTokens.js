@@ -1,10 +1,12 @@
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 
-export const generateTokens = ({ _id, username }) => {
+export const generateTokens = ({ _id, username, roles  }) => {
+
   const payload = {
     userId: _id.toString(),
-    username,
+    roles,
+
   };
 
   // Generate opaque refresh token (random string)
@@ -15,6 +17,6 @@ export const generateTokens = ({ _id, username }) => {
       expiresIn: "15m",
     }),
     refreshToken,
-    userId: _id.toString(), // Include userId for storing in DB
+    userId: _id.toString(),
   };
 };

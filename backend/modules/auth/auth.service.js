@@ -17,7 +17,7 @@ export const registerUser = async (
   ipAddress,
   location,
 ) => {
-  const found = await AuthRepository.findyUsername(username);
+  const found = await AuthRepository.findByUsername(username);
 
   if (found) {
     throw new DuplicateUserError();
@@ -51,9 +51,7 @@ export const registerUser = async (
   return tokens;
 };
 
-/**
- * Login user with device tracking and suspicious activity detection
- */
+
 export const loginUser = async (
   { username, password },
   deviceInfo,
@@ -148,7 +146,7 @@ export const refreshAccessToken = async (refreshToken) => {
 
   // Generate NEW access token (keep same refresh token)
   const newAccessToken = jwt.sign(
-    { userId: user._id, username: user.username },
+    { userId: user._id, roles: user.roles },
     process.env.accessTokenSecret,
     { expiresIn: "15m" },
   );

@@ -8,7 +8,7 @@ import { loginSchema, registerSchema } from "./auth.schema.js";
 const router = express.Router();
 
 // Public routes
-router.post("/register", validate(registerSchema), authController.register);
+router.post("/register", validate(registerSchema),authController.register);
 
 router.post(
   "/login",
