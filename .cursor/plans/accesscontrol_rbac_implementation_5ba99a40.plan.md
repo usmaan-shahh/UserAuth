@@ -166,4 +166,3 @@ After implementation, routes will work as follows:**Customer user** (role: Custo
 
 - ✅ `GET /users/profile` - Read own profile
 - ✅ `PATCH /users/profile` - Update own profile
-- ✅ `DELETE /users/account` - Delete own account

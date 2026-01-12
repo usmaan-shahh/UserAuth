@@ -11,17 +11,13 @@ import RefreshToken from "./refreshToken.model.js";
 const MAX_DEVICES_PER_USER = 5;
 const REFRESH_TOKEN_EXPIRY_DAYS = 7;
 
-export const registerUser = async (
-  { username, password },
-  deviceInfo,
-  ipAddress,
-  location,
-) => {
+export const registerUser = async ({ username, password }) => {
   const found = await AuthRepository.findByUsername(username);
 
   if (found) {
     throw new DuplicateUserError();
   }
+
   const hashedPwd = await bcrypt.hash(password, 10);
 
   const user = await AuthRepository.createUser({
@@ -29,26 +25,7 @@ export const registerUser = async (
     password: hashedPwd,
   });
 
-  const tokens = generateTokens(user);
-
-  const refreshTokenHash = await bcrypt.hash(tokens.refreshToken, 10);
-
-  //“This session will die exactly 7 calendar days from now.”
-  const expiresAt = addDays(new Date(), REFRESH_TOKEN_EXPIRY_DAYS);
-
-  // First login is never suspicious
-  await AuthRepository.storeRefreshToken(
-    user._id,
-    refreshTokenHash,
-    deviceInfo,
-    ipAddress,
-    location,
-    expiresAt,
-    false,
-    null,
-  );
-
-  return tokens;
+  return user;
 };
 
 

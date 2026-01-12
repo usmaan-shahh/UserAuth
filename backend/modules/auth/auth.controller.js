@@ -8,23 +8,10 @@ import * as authService from "./auth.service.js";
 
 export const register = async (request, response, next) => {
   try {
-    const userAgent = request.headers["user-agent"];
-    const deviceInfo = parseDeviceInfo(userAgent, request.body.deviceName); // Returns: { deviceName, deviceType, browser, os, userAgent }
-    const ipAddress = getClientIp(request);
-    const location = getLocationFromIp(ipAddress);
-
-    const tokens = await authService.registerUser(
-      request.body,
-      deviceInfo,
-      ipAddress,
-      location
-    );
-
-    response.cookie("refresh-token", tokens.refreshToken, cookieOptions);
+    await authService.registerUser(request.body);
 
     return response.status(201).json({
-      message: "Signup successful",
-      accessToken: tokens.accessToken,
+      message: "Registration successful. Please login to continue.",
     });
   } catch (err) {
     next(err);
@@ -68,9 +55,7 @@ export const login = async (req, res, next) => {
   }
 };
 
-/**
- * Refresh access token
- */
+
 export const refresh = async (req, res, next) => {
   try {
     const refreshToken = req.cookies?.jwt;
@@ -101,9 +86,7 @@ export const refresh = async (req, res, next) => {
   }
 };
 
-/**
- * Logout user from current device
- */
+
 export const logout = async (req, res, next) => {
   try {
     const refreshToken = req.cookies?.jwt;
@@ -122,9 +105,7 @@ export const logout = async (req, res, next) => {
   }
 };
 
-/**
- * Get all active sessions for the current user
- */
+
 export const getSessions = async (req, res, next) => {
   try {
     const userId = req.auth.userId; // From auth middleware
@@ -141,9 +122,7 @@ export const getSessions = async (req, res, next) => {
   }
 };
 
-/**
- * Revoke a specific session
- */
+
 export const revokeSession = async (req, res, next) => {
   try {
     const userId = req.auth.userId;
@@ -163,9 +142,7 @@ export const revokeSession = async (req, res, next) => {
   }
 };
 
-/**
- * Revoke all sessions except the current one
- */
+
 export const revokeAllOtherSessions = async (req, res, next) => {
   try {
     const userId = req.auth.userId;
@@ -191,9 +168,7 @@ export const revokeAllOtherSessions = async (req, res, next) => {
   }
 };
 
-/**
- * Revoke all sessions (logout from all devices)
- */
+
 export const revokeAllSessions = async (req, res, next) => {
   try {
     const userId = req.auth.userId;
