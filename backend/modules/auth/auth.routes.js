@@ -1,11 +1,21 @@
 import express from "express";
-import { loginLimiter } from "../../middleware/index.js";
+import { authorize, loginLimiter } from "../../middleware/index.js";
 import validate from "../../middleware/validate.js";
 import verifyJWT from "../../middleware/verifyJWT.js";
 import * as authController from "./auth.controller.js";
-import { loginSchema, registerSchema } from "./auth.schema.js";
+import { createAdminSchema, loginSchema, registerSchema } from "./auth.schema.js";
 
 const router = express.Router();
+
+// Admin-only routes (add after protected session routes)
+router.post(
+  "/admin/create",
+  verifyJWT,
+  authorize("createAny", "admin"),
+  validate(createAdminSchema),
+  authController.createAdmin
+);
+
 
 // Public routes
 router.post("/register", validate(registerSchema),authController.register);

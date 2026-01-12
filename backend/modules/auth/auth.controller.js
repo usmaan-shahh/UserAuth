@@ -55,6 +55,23 @@ export const login = async (req, res, next) => {
   }
 };
 
+export const createAdmin = async (req, res, next) => {
+  try {
+    const newAdmin = await authService.createAdminUser(req.body);
+    
+    return res.status(201).json({
+      message: "Admin user created successfully",
+      admin: {
+        id: newAdmin._id,
+        username: newAdmin.username,
+        email: newAdmin.email,
+        roles: newAdmin.roles
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const refresh = async (req, res, next) => {
   try {

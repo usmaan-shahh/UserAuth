@@ -13,7 +13,7 @@ export const authorize = (action, resource) => {
 
       //Role permission check
       for (const role of roles) {
-        const permission = ac.can(role)[action](resource); //Example Can (customer).readOwn("profile") 
+        const permission = ac.can(role)[action](resource); //   Can customer.readOwn("profile")     
         if (permission.granted) {
           hasPermission = true;
           break;

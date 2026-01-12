@@ -95,9 +95,7 @@ export const loginUser = async (
   };
 };
 
-/**
- * Refresh access token using opaque refresh token
- */
+
 export const refreshAccessToken = async (refreshToken) => {
   if (!refreshToken) {
     throw new Error("UNAUTHORIZED");
@@ -131,9 +129,7 @@ export const refreshAccessToken = async (refreshToken) => {
   return { accessToken: newAccessToken, refreshToken };
 };
 
-/**
- * Logout user from current device
- */
+
 export const logoutUser = async (refreshToken) => {
   if (!refreshToken) {
     return;
@@ -152,9 +148,7 @@ export const logoutUser = async (refreshToken) => {
   }
 };
 
-/**
- * Get all active sessions for a user
- */
+
 export const getUserSessions = async (userId) => {
   const sessions = await AuthRepository.getUserActiveSessions(userId);
 
@@ -174,9 +168,6 @@ export const getUserSessions = async (userId) => {
   }));
 };
 
-/**
- * Revoke a specific session
- */
 export const revokeSession = async (userId, sessionId) => {
   const session = await RefreshToken.findOne({
     _id: sessionId,
@@ -191,9 +182,7 @@ export const revokeSession = async (userId, sessionId) => {
   await AuthRepository.revokeRefreshToken(sessionId);
 };
 
-/**
- * Revoke all sessions except the current one
- */
+
 export const revokeAllOtherSessions = async (userId, currentRefreshToken) => {
   if (!currentRefreshToken) {
     throw new Error("UNAUTHORIZED");
@@ -223,9 +212,25 @@ export const revokeAllOtherSessions = async (userId, currentRefreshToken) => {
   }
 };
 
-/**
- * Revoke all sessions for a user (e.g., on password change)
- */
+
 export const revokeAllSessions = async (userId) => {
   await AuthRepository.revokeAllUserTokens(userId);
+};
+
+export const createAdminUser = async ({ username, password, email }) => {
+  const found = await AuthRepository.findByUsername(username);
+  if (found) {
+    throw new DuplicateUserError();
+  }
+
+  const hashedPwd = await bcrypt.hash(password, 10);
+  
+  const user = await AuthRepository.createUser({
+    username,
+    password: hashedPwd,
+    email,
+    roles: ["admin"]  // Explicitly set admin role
+  });
+
+  return user;
 };

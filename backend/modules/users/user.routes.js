@@ -1,7 +1,6 @@
 import express from "express";
 import { authorize, validate, verifyJWT } from "../../middleware/index.js";
 import * as userController from "./user.controller.js";
-import { updateUserSchema } from "./user.schema.js";
 
 const router = express.Router();
 
