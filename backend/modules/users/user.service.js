@@ -1,5 +1,3 @@
-import bcrypt from "bcryptjs";
-import AuthUser from "../auth/auth.model.js";
 import { UserRepository } from "./user.repository.js";
 
 export const getUserProfile = async (userId) => {
