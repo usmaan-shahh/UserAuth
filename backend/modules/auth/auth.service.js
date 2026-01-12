@@ -217,7 +217,7 @@ export const revokeAllSessions = async (userId) => {
   await AuthRepository.revokeAllUserTokens(userId);
 };
 
-export const createAdminUser = async ({ username, password, email }) => {
+export const createAdminUser = async ({ username, password, }) => {
   const found = await AuthRepository.findByUsername(username);
   if (found) {
     throw new DuplicateUserError();
@@ -228,7 +228,6 @@ export const createAdminUser = async ({ username, password, email }) => {
   const user = await AuthRepository.createUser({
     username,
     password: hashedPwd,
-    email,
     roles: ["admin"]  // Explicitly set admin role
   });
 

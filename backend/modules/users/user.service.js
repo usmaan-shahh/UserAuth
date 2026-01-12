@@ -17,3 +17,17 @@ export const getUserProfile = async (userId) => {
     updatedAt: user.updatedAt,
   };
 };
+
+export const getAllUsers = async () => {
+  const users = await UserRepository.findAll();
+
+  return users.map((user) => ({
+    id: user._id,
+    username: user.username,
+    email: user.email,
+    roles: user.roles,
+    isEmailVerified: user.isEmailVerified,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  }));
+};

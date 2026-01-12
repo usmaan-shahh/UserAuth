@@ -1,5 +1,18 @@
 import * as userService from "./user.service.js";
 
+export const getAllUsers = async (req, res, next) => {
+  try {
+    const users = await userService.getAllUsers();
+
+    return res.status(200).json({
+      users,
+      count: users.length,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const getProfile = async (req, res, next) => {
   try {
     const userId = req.auth.userId; // From verifyJWT middleware

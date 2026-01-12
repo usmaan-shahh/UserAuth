@@ -11,6 +11,9 @@ ac.grant("admin")
   .readAny("profile")
   .updateAny("profile")
   .deleteAny("profile")
-  .createAny("admin");   
+  .createAny("admin")
+  .readAny("user")
+  .updateAny("user")
+  .deleteAny("user");   
 
 export default ac;

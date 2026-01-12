@@ -123,82 +123,82 @@ export const logout = async (req, res, next) => {
 };
 
 
-export const getSessions = async (req, res, next) => {
-  try {
-    const userId = req.auth.userId; // From auth middleware
+// export const getSessions = async (req, res, next) => {
+//   try {
+//     const userId = req.auth.userId; // From auth middleware
 
-    const sessions = await authService.getUserSessions(userId);
+//     const sessions = await authService.getUserSessions(userId);
 
-    return res.json({
-      message: "Sessions retrieved successfully",
-      count: sessions.length,
-      sessions,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
-
-export const revokeSession = async (req, res, next) => {
-  try {
-    const userId = req.auth.userId;
-    const { sessionId } = req.params;
-
-    await authService.revokeSession(userId, sessionId);
-
-    return res.json({
-      message: "Session revoked successfully",
-      sessionId,
-    });
-  } catch (err) {
-    if (err.message === "SESSION_NOT_FOUND") {
-      return res.status(404).json({ message: "Session not found" });
-    }
-    next(err);
-  }
-};
+//     return res.json({
+//       message: "Sessions retrieved successfully",
+//       count: sessions.length,
+//       sessions,
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
 
 
-export const revokeAllOtherSessions = async (req, res, next) => {
-  try {
-    const userId = req.auth.userId;
-    const refreshToken = req.cookies?.jwt;
+// export const revokeSession = async (req, res, next) => {
+//   try {
+//     const userId = req.auth.userId;
+//     const { sessionId } = req.params;
 
-    if (!refreshToken) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
+//     await authService.revokeSession(userId, sessionId);
 
-    await authService.revokeAllOtherSessions(userId, refreshToken);
-
-    return res.json({
-      message: "All other sessions revoked successfully",
-    });
-  } catch (err) {
-    if (err.message === "UNAUTHORIZED") {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    if (err.message === "FORBIDDEN") {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-    next(err);
-  }
-};
+//     return res.json({
+//       message: "Session revoked successfully",
+//       sessionId,
+//     });
+//   } catch (err) {
+//     if (err.message === "SESSION_NOT_FOUND") {
+//       return res.status(404).json({ message: "Session not found" });
+//     }
+//     next(err);
+//   }
+// };
 
 
-export const revokeAllSessions = async (req, res, next) => {
-  try {
-    const userId = req.auth.userId;
+// export const revokeAllOtherSessions = async (req, res, next) => {
+//   try {
+//     const userId = req.auth.userId;
+//     const refreshToken = req.cookies?.jwt;
 
-    await authService.revokeAllSessions(userId);
+//     if (!refreshToken) {
+//       return res.status(401).json({ message: "Unauthorized" });
+//     }
 
-    // Clear current cookie too
-    res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
+//     await authService.revokeAllOtherSessions(userId, refreshToken);
 
-    return res.json({
-      message: "Logged out from all devices successfully",
-    });
-  } catch (err) {
-    next(err);
-  }
-};
+//     return res.json({
+//       message: "All other sessions revoked successfully",
+//     });
+//   } catch (err) {
+//     if (err.message === "UNAUTHORIZED") {
+//       return res.status(401).json({ message: "Unauthorized" });
+//     }
+//     if (err.message === "FORBIDDEN") {
+//       return res.status(403).json({ message: "Forbidden" });
+//     }
+//     next(err);
+//   }
+// };
+
+
+// export const revokeAllSessions = async (req, res, next) => {
+//   try {
+//     const userId = req.auth.userId;
+
+//     await authService.revokeAllSessions(userId);
+
+//     // Clear current cookie too
+//     res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
+
+//     return res.json({
+//       message: "Logged out from all devices successfully",
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// };

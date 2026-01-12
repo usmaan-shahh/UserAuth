@@ -12,6 +12,7 @@ import globalErrorHandler from "./middleware/globalErrorHandler.js";
 import authRouter from "./modules/auth/auth.routes.js";
 import userRouter from "./modules/users/user.routes.js";
 import logger, { morganStream } from "./utils/logger.js";
+import {ensureSuperAdminExists} from "./modules/auth/initSuperAdmin.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

@@ -7,4 +7,11 @@ export class UserRepository {
       .lean()
       .exec();
   }
+
+  static findAll() {
+    return AuthUser.find()
+      .select("-password -refreshTokenHash") // Exclude sensitive fields
+      .lean()
+      .exec();
+  }
 }

@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import AuthUser from "./auth.model.js";
 import logger from "../../utils/logger.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 export const ensureSuperAdminExists = async () => {
 
@@ -27,9 +29,7 @@ export const ensureSuperAdminExists = async () => {
     await AuthUser.create({
       username,
       password: hashedPassword,
-      email,
       roles: ["admin"],
-      isEmailVerified: true
     });
 
     logger.info(`Super admin '${username}' created successfully`);

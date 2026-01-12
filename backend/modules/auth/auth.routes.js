@@ -7,7 +7,6 @@ import { createAdminSchema, loginSchema, registerSchema } from "./auth.schema.js
 
 const router = express.Router();
 
-// Admin-only routes (add after protected session routes)
 router.post(
   "/admin/create",
   verifyJWT,
@@ -16,8 +15,6 @@ router.post(
   authController.createAdmin
 );
 
-
-// Public routes
 router.post("/register", validate(registerSchema),authController.register);
 
 router.post(
@@ -31,21 +28,21 @@ router.get("/refresh", authController.refresh);
 
 router.post("/logout", authController.logout);
 
-// Protected session management routes
-router.get("/sessions", verifyJWT, authController.getSessions);
+// // Protected session management routes
+// router.get("/sessions", verifyJWT, authController.getSessions);
 
-router.delete("/sessions/:sessionId", verifyJWT, authController.revokeSession);
+// router.delete("/sessions/:sessionId", verifyJWT, authController.revokeSession);
 
-router.post(
-  "/sessions/revoke-all-others",
-  verifyJWT,
-  authController.revokeAllOtherSessions,
-);
+// router.post(
+//   "/sessions/revoke-all-others",
+//   verifyJWT,
+//   authController.revokeAllOtherSessions,
+// );
 
-router.post(
-  "/sessions/revoke-all",
-  verifyJWT,
-  authController.revokeAllSessions,
-);
+// router.post(
+//   "/sessions/revoke-all",
+//   verifyJWT,
+//   authController.revokeAllSessions,
+// );
 
 export default router;
