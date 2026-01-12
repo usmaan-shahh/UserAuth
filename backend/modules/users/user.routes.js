@@ -11,10 +11,5 @@ router.use(verifyJWT);
 // Get current user profile
 router.get("/profile", authorize("readOwn", "profile"), userController.getProfile);
 
-// Update current user
-router.patch("/profile", authorize("updateOwn", "profile"), validate(updateUserSchema), userController.updateUser);
-
-// Delete current user account
-router.delete("/account", authorize("deleteOwn", "account"), userController.deleteUser);
 
 export default router;
